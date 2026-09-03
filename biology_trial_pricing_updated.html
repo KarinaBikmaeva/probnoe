@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Пробное занятие по биологии</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   ДИЗАЙН-ТОКЕНЫ
+========================================================= */
+:root{
+  --white:#ffffff;
+  --bg-cool:#F3F6FA;
+  --bg-cool-2:#EEF2F8;
+  --panel:#FFFFFF;
+  --line:#E2E8F0;
+
+  --graphite:#1B2233;
+  --graphite-soft:#5B6478;
+  --graphite-faint:#8890A0;
+
+  --green:#0FB37E;
+  --green-deep:#079066;
+  --emerald:#12C48B;
+  --blue:#3E7BFA;
+  --blue-deep:#2E5FE0;
+  --violet:#8A5CF6;
+  --violet-deep:#6D3EE0;
+  --lavender:#B7A6FB;
+  --pink:#F0499C;
+  --fuchsia:#D946C4;
+
+  --grad-green-blue: linear-gradient(120deg, var(--green), var(--blue));
+  --grad-pink-fuchsia: linear-gradient(120deg, var(--pink), var(--fuchsia));
+  --grad-blue-violet: linear-gradient(120deg, var(--blue), var(--violet));
+  --grad-violet-pink: linear-gradient(120deg, var(--violet), var(--pink));
+  --grad-full: linear-gradient(100deg, var(--green) 0%, var(--blue) 35%, var(--violet) 68%, var(--pink) 100%);
+
+  --shadow-sm: 0 2px 10px rgba(27,34,51,0.06);
+  --shadow-md: 0 12px 32px rgba(27,34,51,0.10);
+  --shadow-lg: 0 24px 60px rgba(27,34,51,0.14);
+  --shadow-color-green: 0 16px 40px rgba(15,179,126,0.28);
+  --shadow-color-blue: 0 16px 40px rgba(62,123,250,0.28);
+  --shadow-color-pink: 0 16px 40px rgba(240,73,156,0.28);
+  --shadow-color-violet: 0 16px 40px rgba(138,92,246,0.28);
+
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 32px;
+  --radius-pill: 999px;
+
+  --font-display: 'Unbounded', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{
+  height:100%; width:100%; overflow:hidden;
+  font-family:var(--font-body);
+  background: var(--bg-cool);
+  color:var(--graphite);
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background: var(--lavender); color:var(--graphite); }
+button{font-family:inherit; cursor:pointer; border:none; background:none;}
+img{display:block; max-width:100%;}
+a{color:inherit;}
+
+/* =========================================================
+   ФОН — мягкие холодные градиентные пятна
+========================================================= */
+.bg-decor{
+  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
+}
+.bg-decor span{
+  position:absolute; border-radius:50%; filter:blur(70px); opacity:0.35;
+}
+.bg-decor .b1{ width:520px; height:520px; top:-180px; left:-160px; background:radial-gradient(circle, var(--emerald), transparent 70%); }
+.bg-decor .b2{ width:460px; height:460px; bottom:-180px; right:-140px; background:radial-gradient(circle, var(--blue), transparent 70%); }
+.bg-decor .b3{ width:360px; height:360px; top:40%; right:8%; background:radial-gradient(circle, var(--pink), transparent 70%); opacity:0.18;}
+.bg-decor .b4{ width:300px; height:300px; bottom:10%; left:6%; background:radial-gradient(circle, var(--violet), transparent 70%); opacity:0.18;}
+
+/* =========================================================
+   APP SHELL
+========================================================= */
+#app{
+  position:relative; z-index:1;
+  width:100vw; height:100vh;
+  display:flex; flex-direction:column;
+}
+
+.progress-bar{
+  position:fixed; top:0; left:0; right:0; height:4px; z-index:50;
+  background:rgba(27,34,51,0.06);
+}
+.progress-fill{
+  height:100%; width:4.76%;
+  background:var(--grad-full);
+  transition:width .5s cubic-bezier(.65,0,.35,1);
+}
+
+.slide-counter{
+  position:fixed; top:22px; right:28px; z-index:50;
+  font-family:var(--font-display); font-size:13px; font-weight:600;
+  color:var(--graphite-soft); letter-spacing:.03em;
+  background:rgba(255,255,255,0.7); backdrop-filter:blur(8px);
+  padding:8px 16px; border-radius:var(--radius-pill);
+  border:1px solid var(--line);
+}
+.slide-counter b{ color:var(--graphite); }
+
+.brand-mark{
+  position:fixed; top:22px; left:28px; z-index:50;
+  font-family:var(--font-display); font-weight:700; font-size:14px;
+  color:var(--graphite); display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,0.7); backdrop-filter:blur(8px);
+  padding:8px 16px; border-radius:var(--radius-pill);
+  border:1px solid var(--line);
+}
+.brand-mark .dot{ width:9px; height:9px; border-radius:50%; background:var(--grad-green-blue); }
+
+/* =========================================================
+   SLIDES
+========================================================= */
+.slides-container{
+  position:relative; flex:1; width:100%; height:100%;
+}
+.slide{
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  padding:96px 7vw 120px;
+  opacity:0; visibility:hidden;
+  transform:translateX(40px) scale(.98);
+  transition:opacity .55s cubic-bezier(.65,0,.35,1), transform .6s cubic-bezier(.65,0,.35,1), visibility 0s linear .55s;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.slide.active{
+  opacity:1; visibility:visible; transform:translateX(0) scale(1);
+  transition:opacity .55s cubic-bezier(.65,0,.35,1), transform .6s cubic-bezier(.65,0,.35,1), visibility 0s linear 0s;
+  z-index:5;
+}
+.slide.prev{ transform:translateX(-40px) scale(.98); }
+.slide-inner{
+  width:100%; max-width:1240px; margin:0 auto;
+  display:flex; flex-direction:column; gap:28px;
+}
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-body); font-weight:700; font-size:13px;
+  color:var(--green-deep);
+  background:rgba(15,179,126,0.1);
+  padding:7px 16px; border-radius:var(--radius-pill);
+  width:fit-content;
+}
+.eyebrow.pink{ color:var(--fuchsia); background:rgba(217,70,196,0.1); }
+.eyebrow.blue{ color:var(--blue-deep); background:rgba(62,123,250,0.1); }
+.eyebrow.violet{ color:var(--violet-deep); background:rgba(138,92,246,0.1); }
+
+h1.slide-title{
+  font-family:var(--font-display); font-weight:800;
+  font-size:clamp(34px, 4.4vw, 60px);
+  line-height:1.05; letter-spacing:-0.01em;
+  color:var(--graphite);
+}
+.slide-subtitle{
+  font-size:clamp(16px,1.5vw,20px); line-height:1.5;
+  color:var(--graphite-soft); max-width:640px; font-weight:500;
+}
+.big-accent{
+  font-family:var(--font-display); font-weight:800;
+  font-size:clamp(28px,3.2vw,44px); line-height:1.12;
+  background:var(--grad-green-blue);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.big-accent.pink{ background:var(--grad-pink-fuchsia); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.big-accent.violet{ background:var(--grad-blue-violet); -webkit-background-clip:text; background-clip:text; color:transparent;}
+
+/* buttons */
+.btn{
+  display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--font-body); font-weight:700; font-size:16px;
+  padding:16px 30px; border-radius:var(--radius-pill);
+  transition:transform .25s ease, box-shadow .25s ease, filter .25s ease;
+}
+.btn-primary{
+  color:#fff; background:var(--grad-green-blue); box-shadow:var(--shadow-color-green);
+}
+.btn-primary:hover{ transform:translateY(-3px); filter:brightness(1.05); }
+.btn-primary.pink{ background:var(--grad-pink-fuchsia); box-shadow:var(--shadow-color-pink); }
+.btn-primary.violet{ background:var(--grad-blue-violet); box-shadow:var(--shadow-color-blue); }
+.btn-secondary{
+  color:var(--graphite); background:#fff; border:1.5px solid var(--line);
+}
+.btn-secondary:hover{ border-color:var(--graphite-faint); transform:translateY(-2px); }
+.btn:active{ transform:translateY(0); }
+
+/* =========================================================
+   NAV CONTROLS (bottom)
+========================================================= */
+.nav-controls{
+  position:fixed; left:0; right:0; bottom:26px; z-index:50;
+  display:flex; align-items:center; justify-content:center; gap:14px;
+  pointer-events:none;
+}
+.nav-controls > *{ pointer-events:auto; }
+.nav-btn{
+  display:flex; align-items:center; gap:8px;
+  font-family:var(--font-body); font-weight:700; font-size:14px;
+  color:var(--graphite); background:rgba(255,255,255,0.85); backdrop-filter:blur(10px);
+  border:1px solid var(--line); padding:13px 22px; border-radius:var(--radius-pill);
+  box-shadow:var(--shadow-sm); transition:all .25s ease;
+}
+.nav-btn:hover:not(:disabled){ transform:translateY(-3px); box-shadow:var(--shadow-md); }
+.nav-btn:disabled{ opacity:.35; cursor:not-allowed; }
+.nav-btn.next{ background:var(--grad-green-blue); color:#fff; border:none; box-shadow:var(--shadow-color-green);}
+.nav-dots{ display:flex; gap:6px; align-items:center; margin:0 6px; }
+.nav-dots span{
+  width:6px; height:6px; border-radius:50%; background:var(--line); transition:all .3s ease;
+}
+.nav-dots span.on{ width:20px; background:var(--grad-green-blue); }
+
+/* =========================================================
+   IMAGE FRAME — авто-подгонка под реальные пропорции
+========================================================= */
+.img-frame{
+  position:relative; border-radius:var(--radius-lg); overflow:hidden;
+  background:#fff; box-shadow:var(--shadow-lg); cursor:zoom-in;
+  transition:transform .35s ease, box-shadow .35s ease;
+  display:flex; align-items:center; justify-content:center;
+}
+.img-frame:hover{ transform:translateY(-6px); box-shadow:0 30px 70px rgba(27,34,51,0.2); }
+.img-frame img{ width:100%; height:100%; object-fit:contain; display:block; }
+.img-frame .zoom-hint{
+  position:absolute; bottom:14px; right:14px; z-index:2;
+  background:rgba(27,34,51,0.65); color:#fff; font-size:12px; font-weight:700;
+  padding:6px 12px; border-radius:var(--radius-pill); backdrop-filter:blur(4px);
+  opacity:0; transition:opacity .25s ease;
+}
+.img-frame:hover .zoom-hint{ opacity:1; }
+
+/* =========================================================
+   MODAL (image viewer)
+========================================================= */
+.modal-overlay{
+  position:fixed; inset:0; z-index:200;
+  background:rgba(20,24,36,0.82); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; visibility:hidden; transition:opacity .3s ease, visibility 0s linear .3s;
+  padding:5vh 5vw;
+}
+.modal-overlay.show{ opacity:1; visibility:visible; transition:opacity .3s ease, visibility 0s; }
+.modal-overlay img{
+  max-width:90vw; max-height:88vh; width:auto; height:auto;
+  object-fit:contain; border-radius:18px; box-shadow:0 30px 90px rgba(0,0,0,0.5);
+  transform:scale(.92); transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.modal-overlay.show img{ transform:scale(1); }
+.modal-close{
+  position:fixed; top:28px; right:32px; z-index:201;
+  width:46px; height:46px; border-radius:50%;
+  background:rgba(255,255,255,0.12); color:#fff; font-size:22px;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid rgba(255,255,255,0.25); transition:all .2s ease;
+}
+.modal-close:hover{ background:rgba(255,255,255,0.25); transform:rotate(90deg); }
+
+/* Scrollbar minimal */
+.slide::-webkit-scrollbar{ width:6px; }
+.slide::-webkit-scrollbar-thumb{ background:var(--line); border-radius:10px; }
+
+@media (max-width:900px){
+  .slide{ padding:88px 5vw 140px; }
+  h1.slide-title{ font-size:clamp(28px,7vw,40px); }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-decor"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span></div>
+
+<div class="brand-mark"><span class="dot"></span>Пробное занятие · Биология</div>
+<div class="slide-counter"><b id="curNum">01</b> / <span id="totalNum">21</span></div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div id="app">
+  <div class="slides-container" id="slidesContainer">
+
+<!-- ================= SLIDE 1 — ЗНАКОМСТВО ================= -->
+<section class="slide active" data-slide="1">
+  <div class="slide-inner" style="display:grid; grid-template-columns:0.9fr 1.1fr; gap:64px; align-items:center;">
+    <div style="display:flex; flex-direction:column; gap:22px;">
+      <div class="eyebrow">Пробное занятие</div>
+      <h1 class="slide-title">Давай знакомиться</h1>
+      <p class="slide-subtitle">Сегодня немного познакомимся, разберём одну тему по биологии и попробуем себя в заданиях ЕГЭ.</p>
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:22px 24px; box-shadow:var(--shadow-sm); max-width:460px;">
+        <p style="font-size:15px; color:var(--graphite-soft); line-height:1.55; font-weight:500;">Пробное занятие — это возможность не только познакомиться, но и почувствовать, как проходят мои занятия.</p>
+      </div>
+      <button class="btn btn-primary" style="margin-top:6px; width:fit-content;" onclick="goTo(2)">Начать →</button>
+    </div>
+    <div style="position:relative; display:flex; justify-content:center;">
+      <div style="position:absolute; width:340px; height:340px; border-radius:50%; background:var(--grad-green-blue); opacity:0.16; filter:blur(40px); top:-20px; right:20px;"></div>
+      <div class="img-frame" data-full="photo.png" onclick="openModal('photo.png')" style="width:min(360px,80%); aspect-ratio:2316/3088; border-radius:36px;">
+        <img src="photo.png" alt="Фото преподавателя">
+        <span class="zoom-hint">Открыть</span>
+      </div>
+      <svg width="70" height="70" viewBox="0 0 70 70" style="position:absolute; bottom:-10px; left:-10px; opacity:.85;">
+        <circle cx="35" cy="35" r="6" fill="var(--green)"/>
+        <circle cx="15" cy="15" r="4" fill="var(--blue)"/>
+        <circle cx="55" cy="12" r="3" fill="var(--pink)"/>
+        <line x1="35" y1="35" x2="15" y2="15" stroke="var(--graphite-faint)" stroke-width="1.4" opacity=".5"/>
+        <line x1="35" y1="35" x2="55" y2="12" stroke="var(--graphite-faint)" stroke-width="1.4" opacity=".5"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 2 — ОБО МНЕ ================= -->
+<section class="slide" data-slide="2">
+  <div class="slide-inner">
+    <div class="eyebrow blue">Обо мне</div>
+    <h1 class="slide-title">Немного обо мне</h1>
+    <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:28px; margin-top:8px; align-items:stretch;">
+      <div style="background:linear-gradient(135deg,#fff,var(--bg-cool-2)); border:1px solid var(--line); border-radius:var(--radius-lg); padding:44px; box-shadow:var(--shadow-md); position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center; gap:16px;">
+        <svg width="120" height="120" viewBox="0 0 120 120" style="position:absolute; top:-20px; right:-20px; opacity:.15;">
+          <circle cx="60" cy="60" r="55" stroke="var(--green)" stroke-width="6" fill="none"/>
+        </svg>
+        <p class="big-accent">Я стараюсь<br>не стоять на месте</p>
+        <p style="font-size:16px; color:var(--graphite-soft); font-weight:500; max-width:460px; line-height:1.55;">Постоянно развиваюсь как преподаватель и повышаю свою экспертность.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm); display:flex; gap:16px; align-items:flex-start;">
+          <div style="width:44px; height:44px; flex-shrink:0; border-radius:14px; background:var(--grad-blue-violet); display:flex; align-items:center; justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </div>
+          <p style="font-size:15px; font-weight:600; line-height:1.5; color:var(--graphite);">По второй части ЕГЭ советуюсь с экспертом ЕГЭ.</p>
+        </div>
+        <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm); display:flex; gap:16px; align-items:flex-start;">
+          <div style="width:44px; height:44px; flex-shrink:0; border-radius:14px; background:var(--grad-pink-fuchsia); display:flex; align-items:center; justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-4.9-8-11a4.8 4.8 0 018-3.4A4.8 4.8 0 0120 10c0 6.1-8 11-8 11z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          </div>
+          <p style="font-size:15px; font-weight:600; line-height:1.5; color:var(--graphite);">Забочусь о том, чтобы подготовка была честной и по-настоящему рабочей.</p>
+        </div>
+        <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm); display:flex; gap:16px; align-items:flex-start;">
+          <div style="width:44px; height:44px; flex-shrink:0; border-radius:14px; background:var(--grad-green-blue); display:flex; align-items:center; justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19.5V5a2 2 0 012-2h13v18H6a2 2 0 01-2-2.5z" stroke="#fff" stroke-width="1.8"/><path d="M19 17H6a2 2 0 000 4h13" stroke="#fff" stroke-width="1.8"/></svg>
+          </div>
+          <p style="font-size:15px; font-weight:600; line-height:1.5; color:var(--graphite);">Слежу за изменениями в ЕГЭ каждый год.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 3 — СЕРТИФИКАТЫ ================= -->
+<section class="slide" data-slide="3">
+  <div class="slide-inner">
+    <div class="eyebrow violet">Развитие</div>
+    <h1 class="slide-title">Продолжаю развиваться</h1>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:10px;">
+      <div class="img-frame" data-full="sert1.png" onclick="openModal('sert1.png')" style="aspect-ratio:1589/1127;">
+        <img src="sert1.png" alt="Сертификат 1"><span class="zoom-hint">Открыть</span>
+      </div>
+      <div class="img-frame" data-full="sert2.png" onclick="openModal('sert2.png')" style="aspect-ratio:1640/1092;">
+        <img src="sert2.png" alt="Сертификат 2"><span class="zoom-hint">Открыть</span>
+      </div>
+      <div class="img-frame" data-full="sert3.png" onclick="openModal('sert3.png')" style="aspect-ratio:1317/937;">
+        <img src="sert3.png" alt="Сертификат 3"><span class="zoom-hint">Открыть</span>
+      </div>
+    </div>
+    <p style="font-size:15px; color:var(--graphite-soft); font-weight:500; text-align:center; margin-top:6px;">Мне важно постоянно повышать свою экспертность и совершенствовать подход к подготовке.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 4 — РЕЗУЛЬТАТЫ ================= -->
+<section class="slide" data-slide="4">
+  <div class="slide-inner" style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;">
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div class="eyebrow">Результаты</div>
+      <h1 class="slide-title">Теперь — к результатам</h1>
+      <p class="big-accent pink">Лучший результат<br>ЕГЭ 2026 года</p>
+      <p class="slide-subtitle">Мне важно показывать реальные результаты работы.</p>
+    </div>
+    <div class="img-frame" data-full="result.png" onclick="openModal('result.png')" style="aspect-ratio:832/496; box-shadow:var(--shadow-color-pink);">
+      <img src="result.png" alt="Отзыв ученицы"><span class="zoom-hint">Открыть</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 5 — ПЕРЕХОД К УРОКУ ================= -->
+<section class="slide" data-slide="5">
+  <div class="slide-inner" style="align-items:center; text-align:center; gap:26px;">
+    <div class="eyebrow blue" style="margin:0 auto;">Начинаем урок</div>
+    <h1 class="slide-title">А теперь немного биологии</h1>
+    <p class="slide-subtitle" style="max-width:560px; margin:0 auto;">Давай не просто поговорим о занятиях — попробуем провести небольшой фрагмент настоящего урока.</p>
+    <div style="margin-top:18px; background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:48px 60px; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;">
+      <svg width="140" height="140" style="position:absolute; top:-30px; left:-30px; opacity:.12;" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" stroke="var(--green)" stroke-width="8" fill="none"/></svg>
+      <svg width="100" height="100" style="position:absolute; bottom:-20px; right:-20px; opacity:.12;" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" stroke="var(--blue)" stroke-width="7" fill="none"/></svg>
+      <p class="big-accent" style="font-size:clamp(30px,3.6vw,48px);">Экология: энергия<br>в экосистеме</p>
+      <p style="font-size:17px; font-weight:600; color:var(--graphite-soft); margin-top:12px;">Пирамида энергии и правило 10% Линдемана</p>
+    </div>
+    <button class="btn btn-primary" onclick="goTo(6)">Разобрать тему →</button>
+  </div>
+</section>
+
+<!-- ================= SLIDE 6 — ЭКОЛОГИЧЕСКИЕ КАТЕГОРИИ ================= -->
+<section class="slide" data-slide="6">
+  <div class="slide-inner">
+    <div class="eyebrow">Экология</div>
+    <h1 class="slide-title">Кто есть кто в экосистеме?</h1>
+    <p class="slide-subtitle">Прежде чем говорить об энергии, разберёмся, кто участвует в пищевых цепях.</p>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:14px;">
+      <div class="eco-card" onclick="this.classList.toggle('flip')" style="cursor:pointer; background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:30px; box-shadow:var(--shadow-sm); transition:all .3s ease; min-height:230px; display:flex; flex-direction:column; gap:12px;">
+        <div style="width:52px;height:52px;border-radius:16px;background:var(--grad-green-blue); display:flex; align-items:center; justify-content:center;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M12 6c-4 0-6 2-6 6M12 12c4 0 6 2 6 6" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display); font-size:19px; font-weight:700;">Продуценты</h3>
+        <p style="font-size:14.5px; color:var(--graphite-soft); font-weight:500; line-height:1.5;">Создают органические вещества из неорганических.</p>
+        <p style="font-size:13px; color:var(--green-deep); font-weight:700; margin-top:auto;">растения, водоросли</p>
+        <p class="eco-hint" style="font-size:13px; color:var(--graphite-faint); font-weight:600; display:none;">Используют энергию солнца — процесс фотосинтеза.</p>
+      </div>
+      <div class="eco-card" onclick="this.classList.toggle('flip')" style="cursor:pointer; background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:30px; box-shadow:var(--shadow-sm); transition:all .3s ease; min-height:230px; display:flex; flex-direction:column; gap:12px;">
+        <div style="width:52px;height:52px;border-radius:16px;background:var(--grad-blue-violet); display:flex; align-items:center; justify-content:center;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 12l4-4M4 12l4 4M20 12l-4-4M20 12l-4 4" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display); font-size:19px; font-weight:700;">Консументы</h3>
+        <p style="font-size:14.5px; color:var(--graphite-soft); font-weight:500; line-height:1.5;">Получают готовые органические вещества, питаясь другими организмами.</p>
+        <p style="font-size:13px; color:var(--blue-deep); font-weight:700; margin-top:auto;">животные</p>
+        <p class="eco-hint" style="font-size:13px; color:var(--graphite-faint); font-weight:600; display:none;">Делятся на порядки: I, II, III — в зависимости от того, кем питаются.</p>
+      </div>
+      <div class="eco-card" onclick="this.classList.toggle('flip')" style="cursor:pointer; background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:30px; box-shadow:var(--shadow-sm); transition:all .3s ease; min-height:230px; display:flex; flex-direction:column; gap:12px;">
+        <div style="width:52px;height:52px;border-radius:16px;background:var(--grad-pink-fuchsia); display:flex; align-items:center; justify-content:center;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#fff" stroke-width="1.8"/><circle cx="5" cy="6" r="2" stroke="#fff" stroke-width="1.8"/><circle cx="19" cy="6" r="2" stroke="#fff" stroke-width="1.8"/><circle cx="5" cy="18" r="2" stroke="#fff" stroke-width="1.8"/><circle cx="19" cy="18" r="2" stroke="#fff" stroke-width="1.8"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display); font-size:19px; font-weight:700;">Редуценты</h3>
+        <p style="font-size:14.5px; color:var(--graphite-soft); font-weight:500; line-height:1.5;">Разлагают органические вещества до более простых неорганических соединений.</p>
+        <p style="font-size:13px; color:var(--fuchsia); font-weight:700; margin-top:auto;">бактерии, грибы</p>
+        <p class="eco-hint" style="font-size:13px; color:var(--graphite-faint); font-weight:600; display:none;">Замыкают круговорот веществ в экосистеме.</p>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--graphite-faint); font-weight:600; text-align:center;">нажми на карточку, чтобы увидеть подсказку</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 7 — ПИЩЕВЫЕ ЦЕПИ ================= -->
+<section class="slide" data-slide="7">
+  <div class="slide-inner" style="display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;">
+    <div style="display:flex; flex-direction:column; gap:18px;">
+      <div class="eyebrow blue">Связи в экосистеме</div>
+      <h1 class="slide-title" style="font-size:clamp(30px,3.6vw,48px);">Как организмы связаны между собой?</h1>
+      <p style="font-size:15px; color:var(--graphite-soft); font-weight:500; line-height:1.55;">Пищевая цепь — последовательность организмов, в которой каждый предыдущий организм служит пищей для следующего.</p>
+      <div style="display:flex; flex-direction:column; gap:14px; margin-top:6px;">
+        <div style="background:#fff; border:1px solid var(--line); border-left:5px solid var(--green); border-radius:var(--radius-md); padding:18px 22px; box-shadow:var(--shadow-sm);">
+          <p style="font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--green-deep); margin-bottom:6px;">ЦЕПЬ ВЫЕДАНИЯ</p>
+          <p style="font-weight:700; font-size:15px; color:var(--graphite);">Растение → травоядное животное → хищник</p>
+          <p style="font-size:13px; color:var(--graphite-faint); font-weight:600; margin-top:6px;">Начинается с живого продуцента.</p>
+        </div>
+        <div style="background:#fff; border:1px solid var(--line); border-left:5px solid var(--fuchsia); border-radius:var(--radius-md); padding:18px 22px; box-shadow:var(--shadow-sm);">
+          <p style="font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--fuchsia); margin-bottom:6px;">ЦЕПЬ РАЗЛОЖЕНИЯ</p>
+          <p style="font-weight:700; font-size:15px; color:var(--graphite);">Мёртвое органическое вещество → редуценты → неорганические вещества</p>
+          <p style="font-size:13px; color:var(--graphite-faint); font-weight:600; margin-top:6px;">Начинается с мёртвого органического материала.</p>
+        </div>
+      </div>
+    </div>
+    <div class="img-frame" data-full="foodchains.png" onclick="openModal('foodchains.png')" style="aspect-ratio:1200/1106;">
+      <img src="foodchains.png" alt="Схема пищевых цепей"><span class="zoom-hint">Открыть</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 8 — ТРОФИЧЕСКИЕ УРОВНИ ================= -->
+<section class="slide" data-slide="8">
+  <div class="slide-inner">
+    <div class="eyebrow violet">Уровни</div>
+    <h1 class="slide-title" style="font-size:clamp(28px,3.4vw,44px);">А теперь посмотрим на пищевую цепь по уровням</h1>
+    <div class="trophic-row" style="display:flex; align-items:center; justify-content:center; gap:10px; margin:18px 0 6px; flex-wrap:wrap;">
+      <div class="trophic-org" data-level="1" onclick="highlightTrophic(1)" style="cursor:pointer; text-align:center; background:#fff; border:2px solid var(--line); border-radius:var(--radius-md); padding:20px 22px; transition:all .3s ease; min-width:130px;">
+        <div style="font-size:34px;">🌾</div>
+        <p style="font-weight:700; font-size:14px; margin-top:6px;">Трава</p>
+      </div>
+      <svg width="34" height="18" viewBox="0 0 34 18"><path d="M2 9h28m0 0l-8-7m8 7l-8 7" stroke="var(--graphite-faint)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="trophic-org" data-level="2" onclick="highlightTrophic(2)" style="cursor:pointer; text-align:center; background:#fff; border:2px solid var(--line); border-radius:var(--radius-md); padding:20px 22px; transition:all .3s ease; min-width:130px;">
+        <div style="font-size:34px;">🦗</div>
+        <p style="font-weight:700; font-size:14px; margin-top:6px;">Кузнечик</p>
+      </div>
+      <svg width="34" height="18" viewBox="0 0 34 18"><path d="M2 9h28m0 0l-8-7m8 7l-8 7" stroke="var(--graphite-faint)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="trophic-org" data-level="3" onclick="highlightTrophic(3)" style="cursor:pointer; text-align:center; background:#fff; border:2px solid var(--line); border-radius:var(--radius-md); padding:20px 22px; transition:all .3s ease; min-width:130px;">
+        <div style="font-size:34px;">🐸</div>
+        <p style="font-weight:700; font-size:14px; margin-top:6px;">Лягушка</p>
+      </div>
+      <svg width="34" height="18" viewBox="0 0 34 18"><path d="M2 9h28m0 0l-8-7m8 7l-8 7" stroke="var(--graphite-faint)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="trophic-org" data-level="4" onclick="highlightTrophic(4)" style="cursor:pointer; text-align:center; background:#fff; border:2px solid var(--line); border-radius:var(--radius-md); padding:20px 22px; transition:all .3s ease; min-width:130px;">
+        <div style="font-size:34px;">🐍</div>
+        <p style="font-weight:700; font-size:14px; margin-top:6px;">Уж</p>
+      </div>
+    </div>
+    <div id="trophicLabel" style="text-align:center; min-height:56px; display:flex; align-items:center; justify-content:center;">
+      <p style="font-size:15px; font-weight:700; color:var(--graphite-faint);">нажми на организм, чтобы увидеть его трофический уровень</p>
+    </div>
+    <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:30px; margin-top:10px; align-items:center;">
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:28px 30px; box-shadow:var(--shadow-sm);">
+        <p class="big-accent" style="font-size:22px;">Что такое трофический уровень?</p>
+        <p style="font-size:14.5px; color:var(--graphite-soft); font-weight:500; margin-top:10px; line-height:1.55;">Трофический уровень — положение организма в пищевой цепи, связанное с его способом получения пищи и энергии.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="font-size:13.5px; font-weight:700; background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 16px;">I → продуценты</div>
+        <div style="font-size:13.5px; font-weight:700; background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 16px;">II → консументы I порядка</div>
+        <div style="font-size:13.5px; font-weight:700; background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 16px;">III → консументы II порядка</div>
+        <div style="font-size:13.5px; font-weight:700; background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 16px;">IV → консументы III порядка</div>
+      </div>
+    </div>
+    <p class="big-accent pink" style="text-align:center; font-size:22px; margin-top:6px;">А что происходит с энергией при переходе между уровнями?</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 9 — ПИРАМИДА ЭНЕРГИИ ================= -->
+<section class="slide" data-slide="9">
+  <div class="slide-inner" style="display:grid; grid-template-columns:0.85fr 1.15fr; gap:48px; align-items:center;">
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="eyebrow">Энергия</div>
+      <h1 class="slide-title" style="font-size:clamp(30px,3.6vw,46px);">Пирамида энергии</h1>
+      <p class="big-accent" style="font-size:clamp(20px,2.2vw,28px);">На следующий трофический уровень переходит примерно 10% энергии предыдущего.</p>
+      <p style="font-size:14.5px; color:var(--graphite-soft); font-weight:500; line-height:1.55;">Большая часть энергии расходуется организмами на жизнедеятельность и рассеивается в виде тепла.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+      <div class="pyr-level" style="width:16%; padding:14px 0; background:var(--grad-pink-fuchsia); border-radius:10px 10px 0 0; text-align:center; color:#fff; font-weight:700; font-size:12px; cursor:pointer;" onclick="alert('IV — консументы III порядка: вершина цепи, меньше всего энергии.')">IV</div>
+      <div class="pyr-level" style="width:34%; padding:16px 0; background:var(--grad-blue-violet); text-align:center; color:#fff; font-weight:700; font-size:13px; cursor:pointer;" onclick="alert('III — консументы II порядка.')">III</div>
+      <div class="pyr-level" style="width:58%; padding:18px 0; background:linear-gradient(120deg,var(--blue),var(--emerald)); text-align:center; color:#fff; font-weight:700; font-size:14px; cursor:pointer;" onclick="alert('II — консументы I порядка.')">II</div>
+      <div class="pyr-level" style="width:88%; padding:22px 0; background:var(--grad-green-blue); border-radius:0 0 10px 10px; text-align:center; color:#fff; font-weight:800; font-size:16px; cursor:pointer;" onclick="alert('I — продуценты: основа пирамиды, больше всего энергии.')">I — продуценты</div>
+      <p style="font-size:12.5px; color:var(--graphite-faint); font-weight:600; margin-top:10px;">нажимай на уровни пирамиды</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 10 — ПРАВИЛО 10% ================= -->
+<section class="slide" data-slide="10">
+  <div class="slide-inner" style="align-items:center; text-align:center;">
+    <div class="eyebrow blue" style="margin:0 auto;">Правило Линдемана</div>
+    <h1 class="slide-title">Правило 10%</h1>
+    <div id="lindemanChain" style="display:flex; align-items:center; justify-content:center; gap:14px; margin:26px 0; flex-wrap:wrap;">
+      <div class="lin-box" data-val="100000" style="background:var(--grad-green-blue); color:#fff; font-family:var(--font-display); font-weight:800; font-size:20px; padding:24px 26px; border-radius:20px; min-width:150px; opacity:0.25; transform:scale(.9); transition:all .5s ease;">100 000 кДж</div>
+      <div class="lin-arrow" style="opacity:0.25; transition:all .5s ease; display:flex; flex-direction:column; align-items:center; gap:2px;">
+        <svg width="38" height="18"><path d="M2 9h30m0 0l-8-7m8 7l-8 7" stroke="var(--graphite-faint)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:11px; font-weight:700; color:var(--graphite-faint);">× 0,1</span>
+      </div>
+      <div class="lin-box" data-val="10000" style="background:linear-gradient(120deg,var(--blue),var(--emerald)); color:#fff; font-family:var(--font-display); font-weight:800; font-size:19px; padding:22px 24px; border-radius:20px; min-width:140px; opacity:0.25; transform:scale(.9); transition:all .5s ease;">10 000 кДж</div>
+      <div class="lin-arrow" style="opacity:0.25; transition:all .5s ease; display:flex; flex-direction:column; align-items:center; gap:2px;">
+        <svg width="38" height="18"><path d="M2 9h30m0 0l-8-7m8 7l-8 7" stroke="var(--graphite-faint)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:11px; font-weight:700; color:var(--graphite-faint);">× 0,1</span>
+      </div>
+      <div class="lin-box" data-val="1000" style="background:var(--grad-blue-violet); color:#fff; font-family:var(--font-display); font-weight:800; font-size:18px; padding:20px 22px; border-radius:20px; min-width:130px; opacity:0.25; transform:scale(.9); transition:all .5s ease;">1 000 кДж</div>
+      <div class="lin-arrow" style="opacity:0.25; transition:all .5s ease; display:flex; flex-direction:column; align-items:center; gap:2px;">
+        <svg width="38" height="18"><path d="M2 9h30m0 0l-8-7m8 7l-8 7" stroke="var(--graphite-faint)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-size:11px; font-weight:700; color:var(--graphite-faint);">× 0,1</span>
+      </div>
+      <div class="lin-box" data-val="100" style="background:var(--grad-pink-fuchsia); color:#fff; font-family:var(--font-display); font-weight:800; font-size:17px; padding:18px 20px; border-radius:20px; min-width:110px; opacity:0.25; transform:scale(.9); transition:all .5s ease;">100 кДж</div>
+    </div>
+    <button class="btn btn-secondary" onclick="playLindeman()" style="margin:0 auto;">▶ Запустить анимацию</button>
+    <p class="big-accent" style="font-size:clamp(20px,2.2vw,28px); margin-top:22px; max-width:760px;">Каждый следующий уровень получает примерно 10% энергии предыдущего.</p>
+  </div>
+</section>
+
+<!-- ================= SLIDE 11 — МИНИ-ПРОВЕРКА ================= -->
+<section class="slide" data-slide="11">
+  <div class="slide-inner" style="align-items:center; text-align:center; max-width:820px;">
+    <div class="eyebrow">Проверка</div>
+    <h1 class="slide-title">Проверим понимание</h1>
+    <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:40px 44px; box-shadow:var(--shadow-lg); width:100%; margin-top:8px;">
+      <p style="font-size:18px; font-weight:700; line-height:1.5; margin-bottom:26px;">Если на первом трофическом уровне находится 50 000 кДж энергии, сколько примерно перейдёт на второй?</p>
+      <div id="miniQuizOptions" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <button class="quiz-opt" onclick="answerMini(this,false)" style="padding:18px; border-radius:16px; border:2px solid var(--line); font-weight:700; font-size:15px; background:#fff; transition:all .25s ease;">5 000 кДж</button>
+        <button class="quiz-opt" onclick="answerMini(this,false)" style="padding:18px; border-radius:16px; border:2px solid var(--line); font-weight:700; font-size:15px; background:#fff; transition:all .25s ease;">500 кДж</button>
+        <button class="quiz-opt" onclick="answerMini(this,false)" style="padding:18px; border-radius:16px; border:2px solid var(--line); font-weight:700; font-size:15px; background:#fff; transition:all .25s ease;">50 000 кДж</button>
+        <button class="quiz-opt" onclick="answerMini(this,false)" style="padding:18px; border-radius:16px; border:2px solid var(--line); font-weight:700; font-size:15px; background:#fff; transition:all .25s ease;">500 000 кДж</button>
+      </div>
+      <div id="miniQuizResult" style="display:none; margin-top:24px; text-align:left; background:var(--bg-cool); border-radius:16px; padding:20px 24px;">
+        <p id="miniQuizVerdict" style="font-weight:800; font-size:16px; margin-bottom:8px;"></p>
+        <p style="font-size:14.5px; color:var(--graphite-soft); font-weight:600;">50 000 × 0,1 = <b style="color:var(--graphite);">5 000 кДж</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+window.MINI_CORRECT_TEXT = "5 000 кДж";
+</script>
+
+<!-- ================= SLIDE 12 — ПРАКТИКА ЕГЭ ================= -->
+<section class="slide" data-slide="12">
+  <div class="slide-inner" style="max-width:900px; margin:0 auto;">
+    <div class="eyebrow violet">Практика</div>
+    <h1 class="slide-title" style="font-size:clamp(28px,3.4vw,42px);">Теперь попробуем задания ЕГЭ</h1>
+    <p class="slide-subtitle">Сначала попробуй решить самостоятельно.</p>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:6px;">
+      <div id="egeProgress" style="display:flex; gap:8px;"></div>
+      <p id="egeCounter" style="font-weight:700; font-size:14px; color:var(--graphite-soft);">Задание 1 / 5</p>
+    </div>
+
+    <div id="egeTaskBox" style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:36px 40px; box-shadow:var(--shadow-lg); margin-top:6px; min-height:280px; display:flex; flex-direction:column; gap:18px;">
+      <p id="egeCondition" style="font-size:17px; font-weight:600; line-height:1.55;"></p>
+      <div id="egeVisual"></div>
+      <div id="egeSolutionBox" style="display:none; background:var(--bg-cool); border-radius:16px; padding:20px 24px;">
+        <p style="font-size:13px; font-weight:700; color:var(--graphite-faint); margin-bottom:8px;">РЕШЕНИЕ</p>
+        <p id="egeSolutionText" style="font-size:15px; font-weight:600; line-height:1.7; color:var(--graphite-soft);"></p>
+        <p style="font-size:14px; font-weight:700; color:var(--graphite-faint); margin-top:14px;">ОТВЕТ</p>
+        <p id="egeAnswer" class="big-accent" style="font-size:32px;"></p>
+      </div>
+      <div style="display:flex; gap:12px; margin-top:auto;">
+        <button class="btn btn-secondary" id="egeShowBtn" onclick="showEgeSolution()">Показать решение</button>
+        <div style="flex:1;"></div>
+        <button class="btn btn-secondary" onclick="egePrev()" id="egePrevBtn">← Пред. задание</button>
+        <button class="btn btn-primary violet" onclick="egeNext()" id="egeNextBtn">Следующее задание →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 13 — ПЕРЕХОД К ИГРЕ ================= -->
+<section class="slide" data-slide="13">
+  <div class="slide-inner" style="align-items:center; text-align:center;">
+    <div class="eyebrow pink" style="margin:0 auto;">Игра</div>
+    <h1 class="slide-title">А теперь немного поиграем</h1>
+    <p class="slide-subtitle" style="max-width:560px; margin:0 auto;">Посмотрим, насколько уверенно ты ориентируешься в разных разделах биологии.</p>
+    <div style="margin-top:24px; position:relative;">
+      <div style="position:absolute; inset:-20px; background:var(--grad-violet-pink); opacity:.2; filter:blur(40px); border-radius:50%;"></div>
+      <p class="big-accent pink" style="position:relative; font-size:clamp(38px,5vw,64px); letter-spacing:0.02em;">СВОЯ ИГРА</p>
+    </div>
+    <button class="btn btn-primary pink" onclick="goTo(14)" style="margin-top:10px;">Начать игру →</button>
+  </div>
+</section>
+
+<!-- ================= SLIDE 14 — ИГРОВОЕ ПОЛЕ ================= -->
+<section class="slide" data-slide="14">
+  <div class="slide-inner" style="max-width:1180px; margin:0 auto; gap:18px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+      <div>
+        <div class="eyebrow pink">Своя игра</div>
+        <h1 class="slide-title" style="font-size:clamp(24px,2.8vw,36px); margin-top:8px;">Выбери категорию и вопрос</h1>
+      </div>
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-pill); padding:14px 26px; box-shadow:var(--shadow-sm); font-family:var(--font-display); font-weight:800; font-size:18px;">
+        Счёт: <span id="gameScore" style="background:var(--grad-green-blue); -webkit-background-clip:text; background-clip:text; color:transparent;">0</span>
+      </div>
+    </div>
+    <div id="gameBoard" style="display:grid; grid-template-columns:repeat(7,1fr); gap:8px;"></div>
+  </div>
+</section>
+
+<!-- GAME QUESTION MODAL -->
+<div class="modal-overlay" id="gameModal" style="align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:28px; padding:44px 46px; max-width:640px; width:92%; box-shadow:0 30px 90px rgba(0,0,0,.4); position:relative; max-height:86vh; overflow-y:auto;">
+    <button class="modal-close" style="position:absolute; top:16px; right:18px; background:var(--bg-cool); color:var(--graphite); border:1px solid var(--line); width:38px; height:38px;" onclick="closeGameModal()">×</button>
+    <div style="display:flex; gap:10px; align-items:center; margin-bottom:16px;">
+      <span id="gqCategory" style="font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:.04em; background:var(--grad-blue-violet); -webkit-background-clip:text; background-clip:text; color:transparent;"></span>
+      <span id="gqValue" style="font-family:var(--font-display); font-weight:800; font-size:13px; background:var(--bg-cool); padding:4px 12px; border-radius:var(--radius-pill); color:var(--graphite-soft);"></span>
+    </div>
+    <p id="gqQuestion" style="font-size:18px; font-weight:700; line-height:1.5; margin-bottom:22px;"></p>
+    <div id="gqAnswerBox" style="display:none; background:var(--bg-cool); border-radius:16px; padding:20px 22px; margin-bottom:20px;">
+      <p style="font-size:12.5px; font-weight:700; color:var(--graphite-faint); margin-bottom:6px;">ОТВЕТ</p>
+      <p id="gqAnswerText" style="font-size:16px; font-weight:700; margin-bottom:10px;"></p>
+      <p id="gqExplain" style="font-size:14px; color:var(--graphite-soft); font-weight:500; line-height:1.5;"></p>
+    </div>
+    <div id="gqControlsPre">
+      <button class="btn btn-primary violet" onclick="showGameAnswer()">Показать ответ</button>
+    </div>
+    <div id="gqControlsPost" style="display:none; gap:12px;">
+      <button class="btn btn-primary" onclick="gradeGame(true)">✓ Правильно</button>
+      <button class="btn btn-secondary" onclick="gradeGame(false)">✗ Неправильно</button>
+    </div>
+    <div id="gqControlsDone" style="display:none;">
+      <button class="btn btn-secondary" onclick="closeGameModal()">Вернуться к игре</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SLIDE 15 — РЕЗУЛЬТАТ ИГРЫ ================= -->
+<section class="slide" data-slide="15">
+  <div class="slide-inner" style="align-items:center; text-align:center; max-width:760px; margin:0 auto;">
+    <div class="eyebrow pink" style="margin:0 auto;">Итоги</div>
+    <h1 class="slide-title">Игра закончена</h1>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; width:100%; margin-top:10px;">
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:26px; box-shadow:var(--shadow-sm);">
+        <p style="font-family:var(--font-display); font-weight:800; font-size:34px;" id="resTotal">0</p>
+        <p style="font-size:13px; font-weight:700; color:var(--graphite-faint); margin-top:6px;">Итоговый счёт</p>
+      </div>
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:26px; box-shadow:var(--shadow-sm);">
+        <p style="font-family:var(--font-display); font-weight:800; font-size:34px; color:var(--green-deep);" id="resCorrect">0</p>
+        <p style="font-size:13px; font-weight:700; color:var(--graphite-faint); margin-top:6px;">Правильных ответов</p>
+      </div>
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:26px; box-shadow:var(--shadow-sm);">
+        <p style="font-family:var(--font-display); font-weight:800; font-size:34px; color:var(--fuchsia);" id="resWrong">0</p>
+        <p style="font-size:13px; font-weight:700; color:var(--graphite-faint); margin-top:6px;">Ошибок</p>
+      </div>
+    </div>
+    <div style="background:linear-gradient(135deg,#fff,var(--bg-cool-2)); border:1px solid var(--line); border-radius:var(--radius-lg); padding:30px 36px; margin-top:8px; box-shadow:var(--shadow-sm);">
+      <p style="font-size:16px; font-weight:700; line-height:1.55;">Мне важно не только получить правильный ответ, но и понять, как ты рассуждаешь.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 16 — КАК ПРОХОДЯТ ЗАНЯТИЯ ================= -->
+<section class="slide" data-slide="16">
+  <div class="slide-inner" style="align-items:center; max-width:1160px;">
+    <div class="eyebrow" style="margin:0 auto;">Процесс</div>
+    <h1 class="slide-title" style="text-align:center;">Как всё устроено</h1>
+    <p class="slide-subtitle" style="text-align:center; margin:0 auto; max-width:720px;">
+      Нажми на любой этап — покажу, что именно происходит на этом шаге.
+    </p>
+
+    <div id="processFlow" class="process-interactive-grid">
+      <!-- Карточки создаются JavaScript ниже. При желании сюда можно добавить свои изображения в PROCESS_DATA. -->
+    </div>
+
+    <div id="processDetail" class="process-detail">
+      <div class="process-detail-copy">
+        <div class="process-detail-number" id="processDetailNumber">01</div>
+        <div>
+          <p class="process-detail-kicker">ЭТАП ПОДГОТОВКИ</p>
+          <h3 id="processDetailTitle">Теория</h3>
+          <p id="processDetailText">Разбираем тему, понимаем основные связи и учимся объяснять материал своими словами.</p>
+        </div>
+      </div>
+      <div class="process-detail-visual" id="processDetailVisual">
+        <div class="process-visual-placeholder">
+          <span>01</span>
+          <b>Понимаем тему</b>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+window.PROCESS_DATA = [
+  {
+    title:"Теория",
+    text:"Разбираем тему, понимаем основные связи и учимся объяснять материал своими словами.",
+    image:"plat.png",
+    imageAlt:"Материалы и задания на платформе"
+  },
+  {
+    title:"Практика",
+    text:"Сразу закрепляем теорию на заданиях и учимся видеть, какое знание нужно применить.",
+    visual:"practice"
+  },
+  {
+    title:"Домашнее задание",
+    text:"После занятия остаётся понятный объём самостоятельной работы для закрепления материала.",
+    image:"disk.png",
+    imageAlt:"Материалы для подготовки"
+  },
+  {
+    title:"Разбор ошибок",
+    text:"Смотрим не только на правильный ответ, но и на ход рассуждений: где возникла ошибка и как её не повторять.",
+    visual:"errors"
+  },
+  {
+    title:"Пробники",
+    text:"Периодически проверяем, как меняется уровень подготовки и насколько уверенно решаются задания.",
+    visual:"mock"
+  },
+  {
+    title:"Статистика",
+    text:"Смотрим на динамику результатов и определяем темы, которые уже освоены, и те, которым нужно уделить больше внимания.",
+    image:"platresult.png",
+    imageAlt:"Статистика и динамика результатов"
+  },
+  {
+    title:"Корректировка подготовки",
+    text:"По результатам работы меняем акценты: усиливаем слабые темы и двигаемся дальше без бессмысленного решения заданий.",
+    visual:"plan"
+  }
+];
+</script>
+
+<!-- ================= SLIDE 17 — ПЛАТФОРМА / МАТЕРИАЛЫ / ПРОГРЕСС ================= -->
+<section class="slide" data-slide="17">
+  <div class="slide-inner" style="max-width:1160px; margin:0 auto;">
+    <div class="eyebrow blue">Инструменты</div>
+    <h1 class="slide-title" style="font-size:clamp(28px,3.4vw,42px);">Платформа, материалы и прогресс</h1>
+    <div style="display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;">
+      <button class="tab-btn active-tab" data-tab="plat" onclick="switchTab('plat')" style="padding:12px 24px; border-radius:var(--radius-pill); font-weight:700; font-size:14px; border:2px solid var(--line); background:#fff;">Платформа</button>
+      <button class="tab-btn" data-tab="disk" onclick="switchTab('disk')" style="padding:12px 24px; border-radius:var(--radius-pill); font-weight:700; font-size:14px; border:2px solid var(--line); background:#fff;">Материалы</button>
+      <button class="tab-btn" data-tab="progress" onclick="switchTab('progress')" style="padding:12px 24px; border-radius:var(--radius-pill); font-weight:700; font-size:14px; border:2px solid var(--line); background:#fff;">Прогресс</button>
+    </div>
+    <div style="display:grid; grid-template-columns:1.3fr 0.9fr; gap:40px; align-items:center; margin-top:10px;">
+      <div class="img-frame" id="tabImgFrame" data-full="plat.png" onclick="openModal(this.dataset.full)" style="aspect-ratio:1086/420; transition:aspect-ratio .4s ease;">
+        <img id="tabImg" src="plat.png" alt="Платформа"><span class="zoom-hint">Открыть</span>
+      </div>
+      <div>
+        <p id="tabText" style="font-size:16px; font-weight:600; color:var(--graphite-soft); line-height:1.6;">Здесь проходит работа с учебными материалами и заданиями.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+window.TAB_DATA = {
+  plat:     { img:"plat.png",       ratio:"1086/420", text:"Здесь проходит работа с учебными материалами и заданиями." },
+  disk:     { img:"disk.png",       ratio:"402/386",  text:"На Яндекс Диске есть отдельная папка с материалами для подготовки." },
+  progress: { img:"platresult.png", ratio:"1068/426", text:"На платформе можно отслеживать прогресс учеников и видеть динамику результатов." }
+};
+</script>
+
+<!-- ================= SLIDE 18 — ЧТО ПОЛУЧАЕТ УЧЕНИК ================= -->
+<section class="slide" data-slide="18">
+  <div class="slide-inner">
+    <div class="eyebrow violet">Формат</div>
+    <h1 class="slide-title">Что будет на занятиях?</h1>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:10px;">
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm);">
+        <div style="width:44px;height:44px;border-radius:14px;background:var(--grad-green-blue); display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19.5V5a2 2 0 012-2h13v18H6a2 2 0 01-2-2.5z" stroke="#fff" stroke-width="1.8"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display); font-weight:700; font-size:17px; margin-bottom:8px;">Теория</h3>
+        <p style="font-size:14px; color:var(--graphite-soft); font-weight:500; line-height:1.5;">Разбираем темы и связи между ними.</p>
+      </div>
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm);">
+        <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(120deg,var(--blue),var(--emerald)); display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display); font-weight:700; font-size:17px; margin-bottom:8px;">Практика</h3>
+        <p style="font-size:14px; color:var(--graphite-soft); font-weight:500; line-height:1.5;">Учимся применять знания на заданиях ЕГЭ.</p>
+      </div>
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm);">
+        <div style="width:44px;height:44px;border-radius:14px;background:var(--grad-blue-violet); display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="#fff" stroke-width="1.8"/><path d="M8 9h8M8 13h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display); font-weight:700; font-size:17px; margin-bottom:8px;">Домашние задания</h3>
+        <p style="font-size:14px; color:var(--graphite-soft); font-weight:500; line-height:1.5;">Закрепляем материал между занятиями.</p>
+      </div>
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm);">
+        <div style="width:44px;height:44px;border-radius:14px;background:var(--grad-violet-pink); display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 6.9L21 11l-6.6 2.1L12 20l-2.4-6.9L3 11l6.6-2.1L12 2z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display); font-weight:700; font-size:17px; margin-bottom:8px;">Пробники</h3>
+        <p style="font-size:14px; color:var(--graphite-soft); font-weight:500; line-height:1.5;">Периодически проверяем уровень подготовки.</p>
+      </div>
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm);">
+        <div style="width:44px;height:44px;border-radius:14px;background:var(--grad-pink-fuchsia); display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V9M11 19V5M18 19v-6" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display); font-weight:700; font-size:17px; margin-bottom:8px;">Статистика</h3>
+        <p style="font-size:14px; color:var(--graphite-soft); font-weight:500; line-height:1.5;">Отслеживаем динамику результатов.</p>
+      </div>
+      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-md); padding:26px; box-shadow:var(--shadow-sm);">
+        <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(120deg,var(--fuchsia),var(--violet)); display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4z" stroke="#fff" stroke-width="1.6"/><path d="M4 9h16" stroke="#fff" stroke-width="1.6"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display); font-weight:700; font-size:17px; margin-bottom:8px;">Материалы</h3>
+        <p style="font-size:14px; color:var(--graphite-soft); font-weight:500; line-height:1.5;">Все необходимые материалы собраны отдельно.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 19 — СТОИМОСТЬ ================= -->
+<section class="slide" data-slide="19">
+  <div class="slide-inner" style="align-items:center; text-align:center; max-width:1120px; margin:0 auto;">
+    <div class="eyebrow" style="margin:0 auto;">Формат занятий</div>
+    <h1 class="slide-title">Стоимость обучения</h1>
+    <p class="slide-subtitle" style="max-width:720px; margin:0 auto;">
+      Можно выбрать формат подготовки под свою цель, темп и количество занятий в месяц.
+    </p>
+
+    <div class="pricing-grid">
+      <!-- БАЗА -->
+      <div class="pricing-card pricing-card-base">
+        <div class="pricing-card-top">
+          <div>
+            <p class="pricing-label">База</p>
+            <p class="pricing-price">9 000 ₽</p>
+            <p class="pricing-period">8 занятий в месяц</p>
+          </div>
+          <div class="pricing-badge">Спокойный темп</div>
+        </div>
+
+        <p class="pricing-description">
+          Изучаем биологию размеренно и последовательно: разбираем темы до понимания,
+          закрепляем материал заданиями и постепенно повышаем сложность.
+        </p>
+
+        <div class="pricing-list">
+          <div class="price-item">8 индивидуальных занятий в месяц</div>
+          <div class="price-item">Последовательное изучение тем</div>
+          <div class="price-item">Разбор заданий и домашних работ</div>
+          <div class="price-item">Разбор ошибок</div>
+          <div class="price-item">Пробники и контроль прогресса</div>
+          <div class="price-item">Материалы для подготовки</div>
+        </div>
+      </div>
+
+      <!-- УГЛУБЛЕННАЯ БИОЛОГИЯ -->
+      <div class="pricing-card pricing-card-deep">
+        <div class="pricing-card-top">
+          <div>
+            <p class="pricing-label">Углублённая биология</p>
+            <p class="pricing-price">13 500 ₽</p>
+            <p class="pricing-period">12 занятий в месяц</p>
+          </div>
+          <div class="pricing-badge">90+ баллов</div>
+        </div>
+
+        <p class="pricing-description">
+          Больше практики и более глубокое погружение в предмет: упор на углублённую
+          биологию, эвристику и системную подготовку к экзамену на результат 90+.
+        </p>
+
+        <div class="pricing-list">
+          <div class="price-item">12 индивидуальных занятий в месяц</div>
+          <div class="price-item">Упор на углублённую биологию</div>
+          <div class="price-item">Эвристика и развитие биологического мышления</div>
+          <div class="price-item">Зачёты после каждого раздела</div>
+          <div class="price-item">Больше пробников и разборов</div>
+          <div class="price-item">Работа над ошибками и точками роста</div>
+          <div class="price-item">Цель — уверенная сдача экзамена на 90+ баллов</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SLIDE 20 — ФИНАЛ ================= -->
+<section class="slide" data-slide="20">
+  <div class="slide-inner" style="align-items:center; text-align:center; max-width:720px; margin:0 auto;">
+    <div style="position:relative;">
+      <div style="position:absolute; inset:-40px; background:var(--grad-full); opacity:.18; filter:blur(50px); border-radius:50%;"></div>
+      <h1 class="slide-title" style="position:relative; font-size:clamp(36px,5vw,64px);">Ну что, попробуем?</h1>
+    </div>
+    <p class="slide-subtitle" style="max-width:600px; margin:0 auto;">Сегодня мы успели познакомиться, немного разобрать биологию, попробовать задания ЕГЭ и сыграть в небольшую «Свою игру».</p>
+    <p class="slide-subtitle" style="max-width:600px; margin:0 auto;">На обычных занятиях будем постепенно выстраивать такую же систему подготовки — от понимания темы до уверенного решения заданий.</p>
+    <div class="feedback-card">
+      <div class="feedback-icon">↗</div>
+      <div>
+        <p class="feedback-title">Дай, пожалуйста, обратную связь по пробному занятию</p>
+        <p class="feedback-text">Что было понятно, что понравилось и что хотелось бы изменить или разобрать подробнее?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  </div> <!-- /slides-container -->
+
+  <div class="nav-controls">
+    <button class="nav-btn" id="prevBtn" onclick="prevSlide()">← Назад</button>
+    <div class="nav-dots" id="navDots"></div>
+    <button class="nav-btn next" id="nextBtn" onclick="nextSlide()">Далее →</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="imgModal">
+  <button class="modal-close" onclick="closeModal()">×</button>
+  <img id="modalImg" src="" alt="">
+</div>
+
+<style>
+.pricing-grid{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:22px;
+  margin-top:26px;
+  text-align:left;
+}
+.pricing-card{
+  position:relative;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:var(--radius-lg);
+  padding:32px;
+  box-shadow:var(--shadow-lg);
+  overflow:hidden;
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.pricing-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:5px;
+  background:var(--grad-green-blue);
+}
+.pricing-card-deep::before{
+  background:var(--grad-violet-pink);
+}
+.pricing-card:hover{
+  transform:translateY(-5px);
+  box-shadow:var(--shadow-md);
+}
+.pricing-card-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+}
+.pricing-label{
+  margin:0;
+  font-family:var(--font-display);
+  font-size:clamp(19px,2vw,25px);
+  font-weight:800;
+  color:var(--graphite);
+}
+.pricing-price{
+  margin:10px 0 0;
+  font-family:var(--font-display);
+  font-size:clamp(34px,4vw,52px);
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-.03em;
+  background:var(--grad-green-blue);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.pricing-card-deep .pricing-price{
+  background:var(--grad-violet-pink);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.pricing-period{
+  margin:8px 0 0;
+  font-size:14px;
+  font-weight:800;
+  color:var(--graphite-soft);
+}
+.pricing-badge{
+  flex:0 0 auto;
+  padding:8px 11px;
+  border-radius:var(--radius-pill);
+  background:var(--bg-cool);
+  border:1px solid var(--line);
+  font-size:11px;
+  font-weight:800;
+  color:var(--graphite-soft);
+  white-space:nowrap;
+}
+.pricing-description{
+  margin:24px 0 0;
+  font-size:14.5px;
+  line-height:1.65;
+  font-weight:600;
+  color:var(--graphite-soft);
+}
+.pricing-list{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin-top:20px;
+}
+.price-item{
+  position:relative;
+  padding:9px 0 9px 27px;
+  font-size:14px;
+  line-height:1.45;
+  font-weight:650;
+  color:var(--graphite);
+}
+.price-item::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:13px;
+  width:13px;
+  height:13px;
+  border-radius:50%;
+  background:var(--grad-green-blue);
+}
+.pricing-card-deep .price-item::before{
+  background:var(--grad-violet-pink);
+}
+@media (max-width: 820px){
+  .pricing-grid{
+    grid-template-columns:1fr;
+  }
+  .pricing-card{
+    padding:26px;
+  }
+}
+@media (max-width: 520px){
+  .pricing-card-top{
+    flex-direction:column;
+  }
+  .pricing-badge{
+    align-self:flex-start;
+  }
+}
+.tab-btn.active-tab{ background:var(--graphite); color:#fff; border-color:var(--graphite); }
+.eco-card.flip .eco-hint{ display:block !important; }
+.eco-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-md); }
+.trophic-org.on{ border-color:var(--violet); background:linear-gradient(135deg,#fff,var(--bg-cool-2)); box-shadow:var(--shadow-color-violet); transform:translateY(-4px); }
+.quiz-opt:hover{ border-color:var(--graphite-faint); transform:translateY(-2px); }
+.quiz-opt.correct{ border-color:var(--green); background:rgba(15,179,126,0.08); color:var(--green-deep); }
+.quiz-opt.wrong{ border-color:var(--fuchsia); background:rgba(217,70,196,0.08); color:var(--fuchsia); }
+.game-cell{ transition:all .25s ease; }
+.game-cell:hover:not(.used){ transform:translateY(-4px); box-shadow:var(--shadow-md); }
+.game-cell.used{ opacity:.35; cursor:default; }
+
+.lin-box, .lin-arrow{ transition:opacity .45s ease, transform .45s ease, filter .45s ease; }
+.lin-box{ opacity:.25; transform:scale(.9); filter:saturate(.65); }
+.lin-arrow{ opacity:.25; }
+.lin-box.lit{ opacity:1 !important; transform:scale(1) !important; filter:saturate(1) drop-shadow(0 10px 22px rgba(62,123,250,.18)); }
+.lin-arrow.lit{ opacity:1 !important; }
+
+.process-interactive-grid{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:8px;
+}
+.process-card{
+  position:relative;
+  min-height:108px;
+  padding:22px 20px;
+  text-align:left;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:var(--shadow-sm);
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease, background .25s ease;
+}
+.process-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-md);
+  border-color:var(--lavender);
+}
+.process-card.selected{
+  border-color:var(--violet);
+  background:linear-gradient(135deg,#fff,var(--bg-cool-2));
+  box-shadow:var(--shadow-color-violet);
+  transform:translateY(-3px);
+}
+.process-card-number{
+  display:block;
+  font-family:var(--font-display);
+  font-size:11px;
+  font-weight:800;
+  color:var(--graphite-faint);
+  margin-bottom:14px;
+}
+.process-card-title{
+  display:block;
+  max-width:180px;
+  font-family:var(--font-display);
+  font-size:14px;
+  line-height:1.3;
+  font-weight:700;
+  color:var(--graphite);
+}
+.process-card-arrow{
+  position:absolute;
+  right:16px;
+  bottom:14px;
+  font-size:18px;
+  color:var(--violet);
+}
+.process-detail{
+  width:100%;
+  min-height:150px;
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:24px;
+  align-items:center;
+  padding:22px 26px;
+  background:linear-gradient(135deg,#fff,var(--bg-cool-2));
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:var(--shadow-md);
+}
+.process-detail-copy{
+  display:flex;
+  gap:18px;
+  align-items:flex-start;
+}
+.process-detail-number{
+  font-family:var(--font-display);
+  font-size:34px;
+  font-weight:800;
+  line-height:1;
+  background:var(--grad-violet-pink);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.process-detail-kicker{
+  font-size:11px;
+  font-weight:800;
+  color:var(--graphite-faint);
+  letter-spacing:.08em;
+  margin-bottom:7px;
+}
+.process-detail h3{
+  font-family:var(--font-display);
+  font-size:22px;
+  font-weight:800;
+  margin-bottom:7px;
+}
+.process-detail p:last-child{
+  font-size:14px;
+  line-height:1.55;
+  font-weight:600;
+  color:var(--graphite-soft);
+}
+.process-detail-visual{
+  min-height:105px;
+}
+.process-image-frame{
+  height:120px;
+  border-radius:18px;
+  overflow:hidden;
+  background:#fff;
+  border:1px solid var(--line);
+  position:relative;
+  box-shadow:var(--shadow-sm);
+}
+.process-image-frame img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+}
+.process-image-frame span{
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  background:rgba(27,34,51,.72);
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+  padding:5px 9px;
+  border-radius:999px;
+}
+.process-visual-placeholder{
+  height:120px;
+  border-radius:18px;
+  background:#fff;
+  border:1px dashed var(--line);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  text-align:center;
+}
+.process-visual-placeholder > span{
+  font-family:var(--font-display);
+  font-size:28px;
+  font-weight:800;
+  background:var(--grad-blue-violet);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+.process-visual-placeholder b{
+  font-family:var(--font-display);
+  font-size:12px;
+}
+.process-visual-placeholder small{
+  font-size:11px;
+  font-weight:600;
+  color:var(--graphite-faint);
+}
+.process-detail-in{ animation:processIn .35s ease; }
+@keyframes processIn{
+  from{ opacity:.2; transform:translateY(8px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+.feedback-card{
+  width:100%;
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  gap:18px;
+  text-align:left;
+  padding:22px 24px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#fff,var(--bg-cool-2));
+  border:1px solid var(--line);
+  box-shadow:var(--shadow-md);
+}
+.feedback-icon{
+  flex:0 0 48px;
+  width:48px;
+  height:48px;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-size:24px;
+  font-weight:800;
+  background:var(--grad-pink-fuchsia);
+  box-shadow:var(--shadow-color-pink);
+}
+.feedback-title{
+  font-family:var(--font-display);
+  font-size:16px;
+  font-weight:800;
+  margin-bottom:6px;
+}
+.feedback-text{
+  font-size:14px;
+  line-height:1.5;
+  font-weight:600;
+  color:var(--graphite-soft);
+}
+
+@media (max-width:900px){
+  .process-interactive-grid{ grid-template-columns:repeat(2,1fr); }
+  .process-detail{ grid-template-columns:1fr; }
+  .process-detail-visual{ display:none; }
+}
+@media (max-width:600px){
+  .process-interactive-grid{ grid-template-columns:1fr; }
+}
+</style>
+
+<script>
+/* =========================================================
+   НАВИГАЦИЯ ПО СЛАЙДАМ
+========================================================= */
+const slides = Array.from(document.querySelectorAll('.slide'));
+const TOTAL = slides.length;
+let current = 1;
+document.getElementById('totalNum').textContent = String(TOTAL).padStart(2,'0');
+
+function renderDots(){
+  const wrap = document.getElementById('navDots');
+  wrap.innerHTML = '';
+  for(let i=1;i<=TOTAL;i++){
+    const s = document.createElement('span');
+    if(i===current) s.classList.add('on');
+    wrap.appendChild(s);
+  }
+}
+
+function goTo(n){
+  if(n<1) n=1;
+  if(n>TOTAL) n=TOTAL;
+  const prevIndex = current;
+  slides.forEach(s=>{
+    const idx = parseInt(s.dataset.slide,10);
+    s.classList.remove('active','prev');
+    if(idx===n) s.classList.add('active');
+    else if(idx < n) s.classList.add('prev');
+  });
+  current = n;
+  document.getElementById('curNum').textContent = String(n).padStart(2,'0');
+
+  // Всегда синхронизируем счёт с итоговым слайдом, в том числе
+  // если ведущий переходит к итогам стрелкой до полного прохождения игры.
+  if(n===15 && typeof gameScore !== 'undefined'){
+    document.getElementById('resTotal').textContent = gameScore;
+    document.getElementById('resCorrect').textContent = gameStats.correct;
+    document.getElementById('resWrong').textContent = gameStats.wrong;
+  }
+  document.getElementById('progressFill').style.width = (n/TOTAL*100)+'%';
+  document.getElementById('prevBtn').disabled = (n===1);
+  document.getElementById('nextBtn').disabled = (n===TOTAL);
+  renderDots();
+  window.scrollTo(0,0);
+  const activeSlide = document.querySelector('.slide.active');
+  if(activeSlide) activeSlide.scrollTop = 0;
+}
+function nextSlide(){ goTo(current+1); }
+function prevSlide(){ goTo(current-1); }
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key==='ArrowRight' || e.key===' '){ e.preventDefault(); if(!imgModalOpen() && !gameModalOpen()) nextSlide(); }
+  else if(e.key==='ArrowLeft'){ if(!imgModalOpen() && !gameModalOpen()) prevSlide(); }
+  else if(e.key==='Escape'){ closeModal(); closeGameModal(); }
+});
+
+/* =========================================================
+   IMAGE MODAL
+========================================================= */
+const imgModal = document.getElementById('imgModal');
+const modalImg = document.getElementById('modalImg');
+function openModal(src){
+  modalImg.src = src;
+  imgModal.classList.add('show');
+}
+function closeModal(){ imgModal.classList.remove('show'); }
+imgModal.addEventListener('click', (e)=>{ if(e.target===imgModal) closeModal(); });
+function imgModalOpen(){ return imgModal.classList.contains('show'); }
+
+/* =========================================================
+   INIT
+========================================================= */
+goTo(1);
+</script>
+<script>
+/* =========================================================
+   МИНИ-ПРОВЕРКА (слайд 11)
+========================================================= */
+let miniAnswered = false;
+function answerMini(btn, isCorrect){
+  if(miniAnswered) return;
+  miniAnswered = true;
+  const opts = document.querySelectorAll('#miniQuizOptions .quiz-opt');
+  opts.forEach(o=>{
+    if(o.textContent.trim() === window.MINI_CORRECT_TEXT) o.classList.add('correct');
+  });
+  const wasCorrect = btn.textContent.trim() === window.MINI_CORRECT_TEXT;
+  if(!wasCorrect) btn.classList.add('wrong');
+  document.getElementById('miniQuizResult').style.display = 'block';
+  document.getElementById('miniQuizVerdict').textContent = wasCorrect ? 'Верно. Ты уже поймал(а) принцип.' : 'Давай ещё раз посмотрим на правило 10%.';
+  document.getElementById('miniQuizVerdict').style.color = wasCorrect ? 'var(--green-deep)' : 'var(--fuchsia)';
+}
+
+/* =========================================================
+   ТРОФИЧЕСКИЕ УРОВНИ (слайд 8)
+========================================================= */
+const TROPHIC_INFO = {
+  1: "I трофический уровень — продуцент",
+  2: "II трофический уровень — консумент I порядка",
+  3: "III трофический уровень — консумент II порядка",
+  4: "IV трофический уровень — консумент III порядка"
+};
+function highlightTrophic(level){
+  document.querySelectorAll('.trophic-org').forEach(el=>{
+    el.classList.toggle('on', parseInt(el.dataset.level,10)===level);
+  });
+  document.getElementById('trophicLabel').innerHTML =
+    '<p class="big-accent" style="font-size:20px;">'+TROPHIC_INFO[level]+'</p>';
+}
+
+/* =========================================================
+   АНИМАЦИЯ ПРАВИЛА 10% (слайд 10)
+========================================================= */
+let lindemanRunId = 0;
+
+function playLindeman(){
+  const runId = ++lindemanRunId;
+  const boxes = Array.from(document.querySelectorAll('#lindemanChain .lin-box'));
+  const arrows = Array.from(document.querySelectorAll('#lindemanChain .lin-arrow'));
+
+  // Полный сброс перед каждым запуском.
+  boxes.forEach(box => box.classList.remove('lit'));
+  arrows.forEach(arrow => arrow.classList.remove('lit'));
+
+  // Первый уровень загорается сразу.
+  if(boxes[0]) boxes[0].classList.add('lit');
+
+  // Каждый следующий уровень появляется только после своего × 0,1.
+  arrows.forEach((arrow, i) => {
+    const delay = 650 + i * 900;
+
+    setTimeout(() => {
+      if(runId !== lindemanRunId) return;
+      arrow.classList.add('lit');
+
+      setTimeout(() => {
+        if(runId !== lindemanRunId) return;
+        if(boxes[i + 1]) boxes[i + 1].classList.add('lit');
+      }, 280);
+    }, delay);
+  });
+}
+</script>
+<script>
+/* =========================================================
+   ПРАКТИКА ЕГЭ (слайд 12)
+========================================================= */
+const EGE_TASKS = [
+  {
+    condition: "Первичная годовая продукция экосистемы составляет 350 000 кДж. Укажите величину энергии, поступающей на третий трофический уровень (в килоджоулях).",
+    solution: "350 000 × 0,1 = 35 000 кДж<br>35 000 × 0,1 = 3 500 кДж",
+    answer: "3500"
+  },
+  {
+    condition: "Первичная годовая продукция экосистемы составляет 345 000 кДж. Укажите величину энергии, поступающей на четвёртый трофический уровень.",
+    solution: "345 000 × 0,1 = 34 500<br>34 500 × 0,1 = 3 450<br>3 450 × 0,1 = 345",
+    answer: "345"
+  },
+  {
+    condition: "На второй трофический уровень экосистемы поступило 27 500 кДж энергии. Укажите величину энергии (в килоджоулях), поступающей на четвёртый трофический уровень.",
+    solution: "27 500 × 0,1 = 2 750<br>2 750 × 0,1 = 275",
+    answer: "275"
+  },
+  {
+    condition: "На основании правила 10% рассчитайте массу травы, которая может обеспечить в степи существование одного беркута массой 3 кг, при условии, что пищевая цепь состоит из четырёх звеньев. В ответе запишите только массу травы (в кг).",
+    solution: "Идём от беркута к траве, умножая каждый раз на 10:",
+    answer: "3000",
+    visual: '<div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-family:var(--font-display); font-weight:800;">'+
+      '<span style="background:var(--grad-pink-fuchsia); color:#fff; padding:10px 16px; border-radius:12px; font-size:14px;">3 кг</span>'+
+      '<span style="color:var(--graphite-faint);">→</span>'+
+      '<span style="background:var(--grad-blue-violet); color:#fff; padding:10px 16px; border-radius:12px; font-size:14px;">30 кг</span>'+
+      '<span style="color:var(--graphite-faint);">→</span>'+
+      '<span style="background:linear-gradient(120deg,var(--blue),var(--emerald)); color:#fff; padding:10px 16px; border-radius:12px; font-size:14px;">300 кг</span>'+
+      '<span style="color:var(--graphite-faint);">→</span>'+
+      '<span style="background:var(--grad-green-blue); color:#fff; padding:10px 16px; border-radius:12px; font-size:14px;">3000 кг</span>'+
+      '</div>'
+  },
+  {
+    condition: "На трофический уровень газели — консумента I порядка — поступает 50 МДж энергии. Определите величину первичной годовой продукции экосистемы (в МДж). В ответ запишите только соответствующее число.",
+    solution: "50 × 10 = 500 МДж",
+    answer: "500"
+  }
+];
+let egeIndex = 0;
+
+function renderEgeProgress(){
+  const wrap = document.getElementById('egeProgress');
+  wrap.innerHTML = '';
+  EGE_TASKS.forEach((_,i)=>{
+    const d = document.createElement('div');
+    d.style.width = i===egeIndex ? '22px' : '8px';
+    d.style.height = '8px';
+    d.style.borderRadius = '999px';
+    d.style.transition = 'all .3s ease';
+    d.style.background = i<=egeIndex ? 'linear-gradient(120deg,var(--blue),var(--violet))' : 'var(--line)';
+    wrap.appendChild(d);
+  });
+}
+
+function renderEgeTask(){
+  const t = EGE_TASKS[egeIndex];
+  document.getElementById('egeCondition').textContent = t.condition;
+  document.getElementById('egeVisual').innerHTML = t.visual || '';
+  document.getElementById('egeSolutionBox').style.display = 'none';
+  document.getElementById('egeSolutionText').innerHTML = t.solution;
+  document.getElementById('egeAnswer').textContent = t.answer;
+  document.getElementById('egeShowBtn').style.display = 'inline-flex';
+  document.getElementById('egeShowBtn').textContent = 'Показать решение';
+  document.getElementById('egeCounter').textContent = 'Задание '+(egeIndex+1)+' / '+EGE_TASKS.length;
+  document.getElementById('egePrevBtn').disabled = (egeIndex===0);
+  document.getElementById('egeNextBtn').textContent = (egeIndex===EGE_TASKS.length-1) ? 'К игре →' : 'Следующее задание →';
+  renderEgeProgress();
+}
+function showEgeSolution(){
+  document.getElementById('egeSolutionBox').style.display = 'block';
+}
+function egeNext(){
+  if(egeIndex < EGE_TASKS.length-1){ egeIndex++; renderEgeTask(); }
+  else { goTo(13); }
+}
+function egePrev(){
+  if(egeIndex>0){ egeIndex--; renderEgeTask(); }
+}
+renderEgeTask();
+</script>
+<script>
+/* =========================================================
+   СВОЯ ИГРА (слайд 14)
+========================================================= */
+const GAME_CATEGORIES = [
+  {
+    name: "Общая биология",
+    grad: "var(--grad-green-blue)",
+    q100: { q:"Какая органелла клетки отвечает за синтез АТФ и почему её называют «энергетической станцией»?",
+            a:"Митохондрия",
+            e:"В митохондриях происходит клеточное дыхание — окисление органических веществ с образованием АТФ, основного источника энергии клетки." },
+    q200: { q:"Почему вирусы не относят к живым организмам в полном смысле, хотя у них есть собственный генетический материал?",
+            a:"Потому что у них нет собственного обмена веществ",
+            e:"Вирусы не могут самостоятельно размножаться и осуществлять обмен веществ — они используют для этого клетку-хозяина, то есть вне клетки не проявляют свойств живого." }
+  },
+  {
+    name: "Генетика",
+    grad: "var(--grad-blue-violet)",
+    q100: { q:"У человека карие глаза (A) доминируют над голубыми (a). Кареглазый гетерозиготный отец (Aa) и голубоглазая мать (aa) ждут ребёнка. Какова вероятность рождения голубоглазого ребёнка?",
+            a:"50%",
+            e:"Скрещивание Aa × aa — это анализирующее скрещивание, расщепление по фенотипу 1:1, то есть 50% Aa (кареглазые) и 50% aa (голубоглазые)." },
+    q200: { q:"При скрещивании дигетерозиготного растения гороха с растением, рецессивным по обоим признакам, получили расщепление, близкое к 1:1:1:1. О чём это говорит?",
+            a:"Гены расположены в разных хромосомах и наследуются независимо",
+            e:"Это анализирующее скрещивание. Расщепление 1:1:1:1 характерно именно для независимого наследования — если бы гены были сцеплены, соотношение классов было бы другим." }
+  },
+  {
+    name: "Ботаника",
+    grad: "linear-gradient(120deg,var(--blue),var(--emerald))",
+    q100: { q:"Какие два механизма обеспечивают движение воды от корней к листьям против силы тяжести?",
+            a:"Корневое давление и транспирация",
+            e:"Корневое давление «выталкивает» воду снизу, а испарение воды листьями (транспирация) создаёт присасывающую силу сверху — вместе они поднимают воду по сосудам." },
+    q200: { q:"Почему при удалении верхушечной почки растения усиливается рост боковых побегов?",
+            a:"Снижается концентрация ауксина, подавляющего боковые почки",
+            e:"Верхушечная почка вырабатывает гормон ауксин, который тормозит рост боковых почек (апикальное доминирование). Без верхушки его становится меньше, и боковые почки трогаются в рост." }
+  },
+  {
+    name: "Зоология",
+    grad: "var(--grad-violet-pink)",
+    q100: { q:"Почему кости птиц полые внутри, а не сплошные, как у большинства млекопитающих?",
+            a:"Это снижает массу тела и облегчает полёт",
+            e:"Полые кости, заполненные воздухом, делают скелет лёгким, сохраняя прочность — важное приспособление к полёту." },
+    q200: { q:"У земноводных сердце трёхкамерное, но кровь в нём всё равно частично смешивается. Почему это происходит?",
+            a:"В желудочке нет перегородки, разделяющей артериальную и венозную кровь",
+            e:"Один желудочек получает и артериальную кровь из лёгких, и венозную из тела — из-за отсутствия перегородки они частично смешиваются, поэтому органы получают смешанную кровь." }
+  },
+  {
+    name: "Экология",
+    grad: "var(--grad-pink-fuchsia)",
+    q100: { q:"Почему пищевые цепи в природе обычно состоят не более чем из 4–5 звеньев?",
+            a:"На каждом уровне теряется около 90% энергии",
+            e:"По правилу 10% на каждый следующий трофический уровень переходит лишь около 10% энергии — после 4–5 звеньев энергии остаётся так мало, что цепь не может продолжаться." },
+    q200: { q:"Как, скорее всего, изменится численность зайцев, если резко истребить их основных хищников — рысей?",
+            a:"Сначала резко вырастет, а затем упадёт из-за нехватки корма",
+            e:"Без хищников численность жертв сначала растёт, но затем корма на всех не хватает, начинается голод и болезни — численность падает. Это пример саморегуляции экосистемы." }
+  },
+  {
+    name: "Эволюция",
+    grad: "linear-gradient(120deg,var(--fuchsia),var(--violet))",
+    q100: { q:"В промышленных районах Англии XIX века среди бабочек берёзовой пяденицы стала преобладать тёмная окраска. Как называется этот процесс и с чем он связан?",
+            a:"Индустриальный меланизм — результат естественного отбора",
+            e:"Копоть от заводов затемнила стволы деревьев, и светлые бабочки стали заметнее для птиц. Тёмные особи выживали и размножались чаще — классический пример движущего отбора." },
+    q200: { q:"Чем движущий отбор принципиально отличается от стабилизирующего?",
+            a:"Движущий сдвигает признак в одну сторону, стабилизирующий сохраняет среднее значение",
+            e:"Движущий отбор благоприятствует особям с отклонением признака в определённую сторону (при смене условий), а стабилизирующий, наоборот, устраняет крайние отклонения и сохраняет уже сложившуюся норму." }
+  },
+  {
+    name: "Анатомия человека",
+    grad: "var(--grad-green-blue)",
+    q100: { q:"Почему при физической нагрузке у человека учащается дыхание?",
+            a:"Организму нужно больше кислорода и быстрее выводить углекислый газ",
+            e:"Мышцы при работе интенсивнее расходуют кислород и производят больше CO₂ — дыхательный центр реагирует на это учащением дыхания." },
+    q200: { q:"Почему тяжёлое повреждение продолговатого мозга смертельно опасно, а повреждение коры больших полушарий может не привести к смерти?",
+            a:"В продолговатом мозге находятся жизненно важные центры — дыхательный и сердечно-сосудистый",
+            e:"Продолговатый мозг регулирует дыхание и работу сердца — без него организм не может жить. Кора отвечает за высшую нервную деятельность, и её повреждение не всегда смертельно." }
+  }
+];
+
+let gameScore = 0;
+let gameStats = { correct:0, wrong:0 };
+let gameAnswered = 0;
+const TOTAL_GAME_Q = GAME_CATEGORIES.length * 2;
+let currentGameCell = null;
+
+function buildGameBoard(){
+  const board = document.getElementById('gameBoard');
+  board.innerHTML = '';
+  GAME_CATEGORIES.forEach(cat=>{
+    const h = document.createElement('div');
+    h.style.cssText = "background:"+cat.grad+"; color:#fff; border-radius:14px; padding:14px 8px; text-align:center; font-family:var(--font-display); font-weight:700; font-size:12.5px; line-height:1.25; min-height:56px; display:flex; align-items:center; justify-content:center;";
+    h.textContent = cat.name;
+    board.appendChild(h);
+  });
+  [100,200].forEach(val=>{
+    GAME_CATEGORIES.forEach((cat, ci)=>{
+      const cell = document.createElement('div');
+      cell.className = 'game-cell';
+      cell.dataset.cat = ci; cell.dataset.val = val;
+      cell.style.cssText = "background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px 8px; text-align:center; font-family:var(--font-display); font-weight:800; font-size:20px; color:var(--graphite-soft); cursor:pointer; box-shadow:var(--shadow-sm);";
+      cell.textContent = val;
+      cell.onclick = ()=> openGameCell(ci, val, cell);
+      board.appendChild(cell);
+    });
+  });
+}
+
+function openGameCell(catIndex, val, cellEl){
+  if(cellEl.classList.contains('used')) return;
+  currentGameCell = cellEl;
+  const cat = GAME_CATEGORIES[catIndex];
+  const q = val===100 ? cat.q100 : cat.q200;
+  document.getElementById('gqCategory').textContent = cat.name;
+  document.getElementById('gqValue').textContent = val+' баллов';
+  document.getElementById('gqQuestion').textContent = q.q;
+  document.getElementById('gqAnswerText').textContent = q.a;
+  document.getElementById('gqExplain').textContent = q.e;
+  document.getElementById('gqAnswerBox').style.display = 'none';
+  document.getElementById('gqControlsPre').style.display = 'block';
+  document.getElementById('gqControlsPost').style.display = 'none';
+  document.getElementById('gqControlsDone').style.display = 'none';
+  document.getElementById('gameModal').dataset.val = val;
+  document.getElementById('gameModal').classList.add('show');
+}
+function showGameAnswer(){
+  document.getElementById('gqAnswerBox').style.display = 'block';
+  document.getElementById('gqControlsPre').style.display = 'none';
+  document.getElementById('gqControlsPost').style.display = 'flex';
+}
+function gradeGame(isCorrect){
+  const val = parseInt(document.getElementById('gameModal').dataset.val,10);
+  if(isCorrect){ gameScore += val; gameStats.correct++; }
+  else { gameStats.wrong++; }
+  gameAnswered++;
+  document.getElementById('gameScore').textContent = gameScore;
+  if(currentGameCell){ currentGameCell.classList.add('used'); currentGameCell.style.cursor='default'; }
+  document.getElementById('gqControlsPost').style.display = 'none';
+  document.getElementById('gqControlsDone').style.display = 'block';
+  if(gameAnswered >= TOTAL_GAME_Q){
+    setTimeout(()=>{
+      closeGameModal();
+      document.getElementById('resTotal').textContent = gameScore;
+      document.getElementById('resCorrect').textContent = gameStats.correct;
+      document.getElementById('resWrong').textContent = gameStats.wrong;
+      goTo(15);
+    }, 500);
+  }
+}
+function closeGameModal(){
+  document.getElementById('gameModal').classList.remove('show');
+}
+function gameModalOpen(){ return document.getElementById('gameModal').classList.contains('show'); }
+document.getElementById('gameModal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget) closeGameModal(); });
+
+buildGameBoard();
+</script>
+<script>
+/* =========================================================
+   ИНТЕРАКТИВНЫЙ ПРОЦЕСС ПОДГОТОВКИ (слайд 16)
+========================================================= */
+(function(){
+  const wrap = document.getElementById('processFlow');
+  const detail = document.getElementById('processDetail');
+  const title = document.getElementById('processDetailTitle');
+  const text = document.getElementById('processDetailText');
+  const number = document.getElementById('processDetailNumber');
+  const visual = document.getElementById('processDetailVisual');
+
+  function renderVisual(step, index){
+    if(step.image){
+      visual.innerHTML = `
+        <div class="process-image-frame">
+          <img src="${step.image}" alt="${step.imageAlt || step.title}">
+          <span>Открыть</span>
+        </div>
+      `;
+      visual.onclick = () => openModal(step.image);
+      visual.style.cursor = 'zoom-in';
+      return;
+    }
+
+    const visualMap = {
+      practice: '<span class="process-visual-symbol">✓</span><b>Учимся применять</b><small>теория → задание → решение</small>',
+      errors: '<span class="process-visual-symbol">↺</span><b>Находим причину ошибки</b><small>ошибка → разбор → новый алгоритм</small>',
+      mock: '<span class="process-visual-symbol">★</span><b>Проверяем себя</b><small>результат → анализ → следующий шаг</small>',
+      plan: '<span class="process-visual-symbol">→</span><b>Меняем акценты</b><small>слабые места → точечная практика</small>'
+    };
+
+    visual.innerHTML = `<div class="process-visual-placeholder">${visualMap[step.visual] || `<span>${String(index+1).padStart(2,'0')}</span><b>${step.title}</b>`}</div>`;
+    visual.onclick = null;
+    visual.style.cursor = 'default';
+  }
+
+  function selectStep(index){
+    const step = window.PROCESS_DATA[index];
+    document.querySelectorAll('.process-card').forEach((card, i)=>{
+      card.classList.toggle('selected', i===index);
+    });
+    number.textContent = String(index+1).padStart(2,'0');
+    title.textContent = step.title;
+    text.textContent = step.text;
+    renderVisual(step, index);
+    detail.classList.remove('process-detail-in');
+    requestAnimationFrame(() => detail.classList.add('process-detail-in'));
+  }
+
+  window.PROCESS_DATA.forEach((step, i)=>{
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = 'process-card';
+    card.innerHTML = `
+      <span class="process-card-number">${String(i+1).padStart(2,'0')}</span>
+      <span class="process-card-title">${step.title}</span>
+      <span class="process-card-arrow">↗</span>
+    `;
+    card.onclick = () => selectStep(i);
+    wrap.appendChild(card);
+  });
+
+  selectStep(0);
+})();
+/* =========================================================
+   ВКЛАДКИ ПЛАТФОРМА/МАТЕРИАЛЫ/ПРОГРЕСС (слайд 17)
+========================================================= */
+function switchTab(tab){
+  const data = window.TAB_DATA[tab];
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('active-tab', b.dataset.tab===tab);
+  });
+  const frame = document.getElementById('tabImgFrame');
+  const img = document.getElementById('tabImg');
+  frame.style.opacity = '0';
+  setTimeout(()=>{
+    img.src = data.img;
+    frame.dataset.full = data.img;
+    frame.style.aspectRatio = data.ratio;
+    document.getElementById('tabText').textContent = data.text;
+    frame.style.opacity = '1';
+  }, 220);
+}
+
+
+</script>
+</body>
+</html>
