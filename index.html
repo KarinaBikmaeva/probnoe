@@ -628,22 +628,21 @@ window.MINI_CORRECT_TEXT = "5 000 кДж";
         <h1 class="slide-title">Пройдём маленький путь<br><span class="quest-gradient">по большой биологии</span></h1>
         <p class="slide-subtitle">Не экзамен и не «проверка на прочность». Ты будешь двигаться по маршруту от простого к более сложному — и по ходу мы увидим, что уже получается уверенно.</p>
         <div class="quest-rules">
-          <div><span>01</span><b>7 остановок</b><small>от общей биологии до эволюции</small></div>
+          <div><span>01</span><b>6 остановок</b><small>от общей биологии до эволюции</small></div>
           <div><span>02</span><b>1 вопрос на каждой</b><small>сразу видим логику решения</small></div>
           <div><span>03</span><b>Ошибаться можно</b><small>важнее понять ход рассуждений</small></div>
         </div>
         <button class="btn btn-primary pink" onclick="startQuest()">Выйти на маршрут →</button>
       </div>
       <div class="quest-preview-card">
-        <div class="quest-preview-top"><span>ТВОЙ МАРШРУТ</span><b>01 → 07</b></div>
+        <div class="quest-preview-top"><span>ТВОЙ МАРШРУТ</span><b>01 → 06</b></div>
         <div class="quest-mini-path">
           <div class="mini-node done"><i>1</i><span>Общая</span></div><div class="mini-line"></div>
           <div class="mini-node"><i>2</i><span>Генетика</span></div><div class="mini-line"></div>
           <div class="mini-node"><i>3</i><span>Ботаника</span></div><div class="mini-line"></div>
           <div class="mini-node"><i>4</i><span>Зоология</span></div><div class="mini-line"></div>
-          <div class="mini-node"><i>5</i><span>Человек</span></div><div class="mini-line"></div>
-          <div class="mini-node"><i>6</i><span>Экология</span></div><div class="mini-line"></div>
-          <div class="mini-node final"><i>7</i><span>Эволюция</span></div>
+          <div class="mini-node"><i>5</i><span>Экология</span></div><div class="mini-line"></div>
+          <div class="mini-node final"><i>6</i><span>Эволюция</span></div>
         </div>
         <div class="quest-preview-note">Каждый правильный ответ открывает следующую точку маршрута.</div>
       </div>
@@ -661,7 +660,7 @@ window.MINI_CORRECT_TEXT = "5 000 кДж";
         <p class="slide-subtitle">Нажми на активную точку. Следующая откроется после ответа.</p>
       </div>
       <div class="quest-progress-card">
-        <span id="questProgressText">1 / 7</span>
+        <span id="questProgressText">1 / 6</span>
         <div class="quest-progress-track"><i id="questProgressFill"></i></div>
       </div>
     </div>
@@ -672,7 +671,7 @@ window.MINI_CORRECT_TEXT = "5 000 кДж";
         <path d="M90 325 C170 325 145 120 260 120 S355 330 445 315 S530 95 650 105 S760 330 855 300 S930 100 1040 120 S1080 285 1130 255" />
       </svg>
       <div class="quest-road-label label-1">СТАРТ</div>
-      <div class="quest-road-label label-7">ФИНИШ</div>
+      <div class="quest-road-label label-6">ФИНИШ</div>
       <div id="questNodes" class="quest-nodes"></div>
       <div id="questWalker" class="quest-walker" aria-hidden="true">🧬</div>
     </div>
@@ -699,8 +698,11 @@ window.MINI_CORRECT_TEXT = "5 000 кДж";
       <b id="questModalDifficulty">Разминка</b>
     </div>
     <h2 id="questQuestion">Вопрос</h2>
+    <div id="questInstruction" class="quest-instruction"></div>
+    <div id="questVisual" class="quest-visual"></div>
     <div id="questOptions" class="quest-options"></div>
     <div id="questFeedback" class="quest-feedback"></div>
+    <button id="questSubmitBtn" class="btn btn-primary pink quest-submit-btn" style="display:none;" onclick="submitQuestAnswer()">Проверить ответ →</button>
     <button id="questNextBtn" class="btn btn-primary pink quest-next-btn" style="display:none;" onclick="continueQuest()">Следующий шаг →</button>
   </div>
 </div>
@@ -714,7 +716,7 @@ window.MINI_CORRECT_TEXT = "5 000 кДж";
     <div class="quest-finish-stats">
       <div><strong id="questCorrect">0</strong><span>правильных ответов</span></div>
       <div><strong id="questAttempts">0</strong><span>попыток</span></div>
-      <div><strong>7</strong><span>разделов биологии</span></div>
+      <div><strong id="questTotalStages">6</strong><span>заданий на маршруте</span></div>
     </div>
     <div class="quest-finish-message" id="questFinishMessage">Главное — не идеальный маршрут, а то, что стало понятнее по дороге.</div>
     <button class="btn btn-primary" onclick="goTo(16)">Показать, как проходят занятия →</button>
@@ -1370,10 +1372,10 @@ window.TAB_DATA = {
 .quest-road-svg path{fill:none;stroke:#d9dfeb;stroke-width:9;stroke-linecap:round;stroke-dasharray:5 16;}
 .quest-road-svg:after{content:"";}
 .quest-road-label{position:absolute;z-index:2;font-family:var(--font-display);font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--graphite-faint);background:rgba(255,255,255,.8);padding:6px 9px;border-radius:99px;border:1px solid var(--line);}
-.label-1{left:4%;bottom:8%;}.label-7{right:3%;top:11%;}
+.label-1{left:4%;bottom:8%;}.label-6{right:3%;top:11%;}
 .quest-nodes{position:absolute;inset:0;z-index:5;}
 .quest-node{position:absolute;width:150px;min-height:72px;transform:translate(-50%,-50%);padding:10px 13px 10px 50px;text-align:left;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease,opacity .25s ease;}
-.quest-node:nth-child(1){left:7%;top:76%;}.quest-node:nth-child(2){left:22%;top:24%;}.quest-node:nth-child(3){left:37%;top:72%;}.quest-node:nth-child(4){left:54%;top:22%;}.quest-node:nth-child(5){left:71%;top:68%;}.quest-node:nth-child(6){left:86%;top:25%;}.quest-node:nth-child(7){left:94%;top:55%;}
+.quest-node:nth-child(1){left:7%;top:76%;}.quest-node:nth-child(2){left:24%;top:24%;}.quest-node:nth-child(3){left:42%;top:72%;}.quest-node:nth-child(4){left:60%;top:22%;}.quest-node:nth-child(5){left:78%;top:68%;}.quest-node:nth-child(6){left:94%;top:55%;}
 .quest-node.current{border:2px solid var(--fuchsia);box-shadow:0 14px 35px rgba(217,70,196,.2);animation:questPulse 2s infinite;}
 .quest-node.current:hover{transform:translate(-50%,-55%);}
 .quest-node.passed{border-color:rgba(15,179,126,.35);}
@@ -1399,6 +1401,25 @@ window.TAB_DATA = {
 .quest-modal-meta b{font-size:10px;padding:6px 9px;border-radius:99px;background:var(--bg-cool);color:var(--graphite-faint);}
 .quest-modal-card h2{font-family:var(--font-display);font-size:clamp(20px,2.3vw,29px);line-height:1.25;margin-bottom:24px;max-width:590px;}
 .quest-options{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.quest-instruction{display:none;margin:-8px 0 18px;padding:11px 14px;border-radius:13px;background:var(--bg-cool);color:var(--graphite-soft);font-size:12.5px;font-weight:700;line-height:1.45;}
+.quest-visual{display:none;margin:-4px 0 20px;text-align:center;}
+.quest-visual img{display:block;width:min(100%,560px);max-height:300px;object-fit:contain;margin:0 auto;border-radius:16px;border:1px solid var(--line);background:#fff;}
+.quest-submit-btn{margin-top:18px;}
+.quest-option.selected{border-color:var(--fuchsia)!important;background:rgba(217,70,196,.07);box-shadow:0 5px 16px rgba(217,70,196,.10);}
+.quest-option.selected span{background:var(--fuchsia);color:#fff;}
+.quest-option.multi-disabled{cursor:default;opacity:.8;}
+.quest-matching{display:grid;gap:10px;}
+.quest-match-row{display:grid;grid-template-columns:minmax(0,1fr) 92px;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;}
+.quest-match-row b{font-size:12.5px;line-height:1.4;}
+.quest-match-row select{width:100%;padding:10px 9px;border:2px solid var(--line);border-radius:11px;background:#fff;font-family:var(--font-body);font-weight:800;color:var(--graphite);cursor:pointer;}
+.quest-match-row select:focus{outline:none;border-color:var(--fuchsia);}
+.quest-source{margin-top:14px;font-size:11px;color:var(--graphite-faint);font-weight:700;}
+@media (max-width:600px){
+  .quest-options{grid-template-columns:1fr;}
+  .quest-match-row{grid-template-columns:1fr 80px;}
+  .quest-modal-card{padding:32px 20px;}
+}
+
 .quest-option{min-height:66px;padding:14px 15px;border-radius:16px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;gap:12px;text-align:left;transition:all .2s ease;}
 .quest-option:not(.review):not(:disabled):hover{border-color:var(--fuchsia);transform:translateY(-2px);box-shadow:var(--shadow-sm);}
 .quest-option span{flex:0 0 30px;width:30px;height:30px;border-radius:10px;background:var(--bg-cool);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:10px;font-weight:800;color:var(--graphite-soft);}
@@ -1444,7 +1465,7 @@ window.TAB_DATA = {
   .quest-road-shell{height:620px;}
   .quest-road-svg{display:none;}
   .quest-node{width:165px;}
-  .quest-node:nth-child(1){left:24%;top:9%;}.quest-node:nth-child(2){left:72%;top:22%;}.quest-node:nth-child(3){left:24%;top:36%;}.quest-node:nth-child(4){left:72%;top:49%;}.quest-node:nth-child(5){left:24%;top:63%;}.quest-node:nth-child(6){left:72%;top:76%;}.quest-node:nth-child(7){left:48%;top:91%;}
+  .quest-node:nth-child(1){left:24%;top:9%;}.quest-node:nth-child(2){left:72%;top:25%;}.quest-node:nth-child(3){left:24%;top:41%;}.quest-node:nth-child(4){left:72%;top:57%;}.quest-node:nth-child(5){left:24%;top:73%;}.quest-node:nth-child(6){left:72%;top:89%;}
   .quest-walker{display:none;}
   .quest-options{grid-template-columns:1fr;}
   .quest-modal-card{padding:30px 22px;}
@@ -1682,91 +1703,88 @@ renderEgeTask();
 ========================================================= */
 const QUEST_STAGES = [
   {
-    title:"Клетка и уровни организации",
+    title:"Мембрана животной клетки",
     topic:"Общая биология",
     kicker:"ОБЩАЯ БИОЛОГИЯ · СТАРТ",
-    difficulty:"Разминка",
-    color:"green",
-    question:"Какой уровень организации живого является минимальным уровнем, на котором проявляются основные свойства живого?",
-    options:["Молекулярный","Клеточный","Органный","Организменный"],
-    answer:1,
-    explanation:"Клетка — структурно-функциональная единица живого: именно на клеточном уровне проявляется совокупность основных свойств живого организма."
+    difficulty:"Разминка · 3 ответа",
+    type:"multi",
+    question:"Выберите три верных ответа и запишите цифры, под которыми они указаны. Что характерно для мембран животных?",
+    options:["фосфолипиды","пептидные связи","полупроницаемость","фагоцитоз","целлюлоза","РНК"],
+    answer:[0,2,3],
+    explanation:`<b>Подходят варианты:</b><br>1) фосфолипиды — основа мембранного билипидного слоя;<br>3) полупроницаемость — способность пропускать одни вещества и задерживать другие;<br>4) фагоцитоз — форма эндоцитоза, характерная для животных клеток.<br><br><b>Не подходят:</b><br>2) пептидные связи — между аминокислотами в белках, но не являются структурным элементом мембраны;<br>5) целлюлоза — полисахарид клеточной стенки растений, у животных отсутствует;<br>6) РНК — не входит в состав мембраны.<br><br><b>Ответ: 134</b>`
   },
   {
-    title:"Генетический код",
+    title:"Комбинативная изменчивость",
     topic:"Генетика",
     kicker:"ГЕНЕТИКА · ШАГ 2",
-    difficulty:"Легче среднего",
-    color:"blue",
-    question:"Участок ДНК содержит информацию о последовательности аминокислот белка. Что непосредственно определяет последовательность аминокислот при синтезе белка?",
-    options:["Последовательность нуклеотидов иРНК","Число хромосом","Количество рибосом","Толщина клеточной мембраны"],
-    answer:0,
-    explanation:"Последовательность нуклеотидов иРНК задаёт последовательность кодонов, а кодоны определяют последовательность аминокислот в белке."
+    difficulty:"Средний · 3 ответа",
+    type:"multi",
+    question:"Выберите три верных ответа и запишите цифры, под которыми они указаны. Какие из перечисленных ниже процессов служат основой формирования комбинативной изменчивости у животных и человека?",
+    options:["вегетативное размножение","репликация ДНК","дробление зиготы","гаметогенез","обмен участками гомологичных хромосом","оплодотворение"],
+    answer:[3,4,5],
+    explanation:`Комбинативная изменчивость — это появление новых сочетаний генов у потомков благодаря перекомбинации наследственного материала при половом размножении.<br><br><b>Верные варианты:</b><br>4) гаметогенез — при образовании гамет происходят кроссинговер и независимое расхождение хромосом;<br>5) обмен участками гомологичных хромосом — кроссинговер в профазе I мейоза ведёт к рекомбинации аллелей;<br>6) оплодотворение — случайное слияние двух гамет даёт новые комбинации генов в зиготе.<br><br><b>Неверные варианты:</b><br>1) вегетативное размножение — комбинативной изменчивости не возникает;<br>2) репликация ДНК — обеспечивает копирование генетической информации, но не создаёт новых комбинаций;<br>3) дробление зиготы — митотические деления оплодотворённой яйцеклетки.<br><br><b>Ответ: 456</b><br><span class="quest-source">Источник: ФИПИ (реальный ЕГЭ, Рохлов, ЕГКР)</span>`
   },
   {
-    title:"Путь воды в растении",
+    title:"Голосеменные и папоротниковидные",
     topic:"Ботаника",
     kicker:"БОТАНИКА · ШАГ 3",
-    difficulty:"Средний",
-    color:"violet",
-    question:"Какой проводящий элемент обеспечивает восходящий ток воды и минеральных веществ от корня к листьям?",
-    options:["Флоэма","Ксилема","Камбий","Эпидерма"],
-    answer:1,
-    explanation:"Ксилема проводит воду и минеральные вещества преимущественно от корня вверх. Флоэма переносит органические вещества."
+    difficulty:"Средний · 3 ответа",
+    type:"multi",
+    question:"Выберите три верных ответа и запишите цифры, под которыми они указаны. Голосеменные растения в отличие от папоротниковидных:",
+    options:["образуют семязачатки","не нуждаются в наличии воды при оплодотворении","являются автотрофными организмами","взаимодействуют с окружающей средой","размножаются спорами","в основном имеют форму деревьев и кустарников"],
+    answer:[0,1,5],
+    explanation:`<b>Верные отличия:</b><br>1) образуют семязачатки — у папоротников семязачатков нет;<br>2) не нуждаются в наличии воды при оплодотворении — у голосеменных вода для оплодотворения не требуется;<br>6) в основном имеют форму деревьев и кустарников — голосеменные преимущественно древесные.<br><br><b>Не подходят:</b><br>3) автотрофные организмы — это характерно и для голосеменных, и для папоротниковидных;<br>4) взаимодействуют с окружающей средой — общее свойство живых организмов;<br>5) размножаются спорами — характерно для папоротников, но не для голосеменных.<br><br><b>Ответ: 126</b>`
   },
   {
-    title:"Кровообращение животных",
+    title:"Позвоночные животные",
     topic:"Зоология",
     kicker:"ЗООЛОГИЯ · ШАГ 4",
-    difficulty:"Средний",
-    color:"pink",
-    question:"Какое преимущество даёт птицам и млекопитающим полное разделение артериальной и венозной крови?",
-    options:["Уменьшает потребность тканей в кислороде","Позволяет поддерживать высокий уровень обмена веществ","Полностью прекращает теплоотдачу","Делает дыхание необязательным"],
-    answer:1,
-    explanation:"Полное разделение потоков крови позволяет эффективно снабжать ткани кислородом, что поддерживает высокий уровень обмена веществ."
+    difficulty:"Сложнее · соответствие",
+    type:"matching",
+    question:"Установите соответствие между признаками и животными, изображёнными на рисунках. Запишите выбранные цифры под соответствующими буквами.",
+    visual:"zoo.png",
+    rows:[
+      ["А) кожа, покрытая чешуей", "1"],
+      ["Б) кожное дыхание", "2"],
+      ["В) двухкамерное сердце у взрослых особей", "3"],
+      ["Г) два круга кровообращения у взрослых животных", "4"],
+      ["Д) шейный позвонок", "5"],
+      ["Е) подвижные веки", "6"]
+    ],
+    answer:["1","2","1","2","2","2"],
+    explanation:`1 — костная рыба, 2 — хвостатая амфибия, 3 — пресмыкающееся, 4 — хрящевая рыба (скат), 5 — млекопитающее, 6 — птица.<br><br>А — 1: кожа рыб покрыта чешуёй, выполняющей защитную функцию.<br>Б — 2: у амфибий кожное дыхание играет важную роль благодаря влажной и пронизанной капиллярами коже.<br>В — 1: сердце взрослых рыб двухкамерное — предсердие и желудочек.<br>Г — 2: у амфибий два круга кровообращения — малый и большой.<br>Д — 2: у амфибий имеется один шейный позвонок.<br>Е — 2: подвижные веки характерны для наземных позвоночных, включая амфибий.<br><br><b>Ответ: 121222</b>`
   },
   {
-    title:"Нервная регуляция",
-    topic:"Анатомия и физиология человека",
-    kicker:"ЧЕЛОВЕК · ШАГ 5",
-    difficulty:"Сложнее",
-    color:"green",
-    question:"Почему при резком испуге у человека учащаются сердцебиение и дыхание?",
-    options:["Активируется симпатический отдел вегетативной нервной системы","Полностью прекращается работа парасимпатического отдела","Кровь перестаёт поступать к мышцам","Снижается потребность организма в кислороде"],
-    answer:0,
-    explanation:"При стрессовой реакции активируется симпатический отдел вегетативной нервной системы: повышаются частота сердечных сокращений и вентиляция лёгких."
-  },
-  {
-    title:"Энергия в экосистеме",
+    title:"Природная экосистема и агробиоценоз",
     topic:"Экология",
-    kicker:"ЭКОЛОГИЯ · ШАГ 6",
-    difficulty:"Сложный",
-    color:"blue",
-    question:"В пищевой цепи на уровне продуцентов запасено 20 000 кДж энергии. Сколько энергии примерно может перейти на второй трофический уровень?",
-    options:["20 кДж","200 кДж","2 000 кДж","18 000 кДж"],
-    answer:2,
-    explanation:"По правилу 10% на следующий трофический уровень в среднем переходит около десятой части энергии: 20 000 × 0,1 = 2 000 кДж."
+    kicker:"ЭКОЛОГИЯ · ШАГ 5",
+    difficulty:"Сложный · 3 ответа",
+    type:"multi",
+    question:"Выберите три верных ответа и запишите цифры, под которыми они указаны. Какие признаки отличают природную экосистему от агробиоценоза?",
+    options:["наличие продуцентов, консументов, редуцентов","самовоспроизведение организмов","разветвленные сети питания","относительно сбалансированный круговорот веществ","высокое видовое разнообразие","зависимость саморегуляции от антропогенного воздействия"],
+    answer:[2,3,4],
+    explanation:`<b>Верные ответы:</b><br>3) разветвленные сети питания — характерны для природных экосистем, в агроценозах они упрощены;<br>4) относительно сбалансированный круговорот веществ — в природных экосистемах вещества возвращаются в круговорот;<br>5) высокое видовое разнообразие — обеспечивает устойчивость природного биоценоза.<br><br><b>Неверные ответы:</b><br>1) наличие продуцентов, консументов, редуцентов — характерно и для агробиоценоза;<br>2) самовоспроизведение организмов — в агробиоценозе тоже происходит размножение;<br>6) зависимость саморегуляции от антропогенного воздействия — характерна для агробиоценоза.<br><br><b>Ответ: 345</b>`
   },
   {
-    title:"Естественный отбор",
+    title:"Палеонтологические доказательства",
     topic:"Эволюция",
     kicker:"ЭВОЛЮЦИЯ · ФИНИШ",
-    difficulty:"Финальный",
-    color:"fuchsia",
-    question:"В популяции особи с определённым наследственным признаком стали оставлять больше потомков из-за изменения условий среды. Какой процесс непосредственно изменяет частоту этого признака в популяции?",
-    options:["Естественный отбор","Митоз","Транскрипция","Осмос"],
-    answer:0,
-    explanation:"Если наследственный признак повышает вероятность выживания и размножения, его носители оставляют больше потомков — действие естественного отбора меняет частоту вариантов признака в популяции."
+    difficulty:"Финальный · 3 ответа",
+    type:"multi",
+    question:"Прочитайте текст. Выберите три предложения, в которых приведены палеонтологические доказательства эволюции. Запишите в таблицу цифры, под которыми они указаны.",
+    text:`(1) В слоях земной коры находят отпечатки древних растений и животных, сохранившиеся на протяжении миллионов лет.<br><br>(2) Кости динозавров и древних млекопитающих свидетельствуют о последовательности изменений форм жизни на Земле.<br><br>(3) Последовательное расположение ископаемых находок в геологических слоях отражает этапы эволюционного развития планеты.<br><br>(4) Сравнение планов строения различных современных организмов позволяет реконструировать их вымерших предков.<br><br>(5) Некоторые предковые признаки у животных проявляются исключительно в эмбриональном развитии.<br><br>(6) Рудиментарные органы указывают на направление эволюции и характер приспособления в конкретной группе организмов.`,
+    answer:[0,1,2],
+    explanation:`К палеонтологическим доказательствам эволюции относятся ископаемые остатки организмов — предложения 1, 2, 3. В предложениях 4 и 6 приведены примеры сравнительно-анатомических доказательств эволюции, в предложении 5 — эмбриологических доказательств.<br><br><b>Ответ: 123</b>`
   }
 ];
-
 let questStage = 0;
 let questCorrect = 0;
 let questAttempts = 0;
 let questAnswered = false;
+let questSelection = [];
 
 function startQuest(){
-  questStage = 0; questCorrect = 0; questAttempts = 0; questAnswered = false;
+  questStage = 0; questCorrect = 0; questAttempts = 0; questAnswered = false; questSelection = [];
   renderQuestRoute();
   goTo(14);
 }
@@ -1786,62 +1804,169 @@ function renderQuestRoute(){
     wrap.appendChild(node);
   });
 
-  const progress=Math.round((questStage/QUEST_STAGES.length)*100);
+  const total=QUEST_STAGES.length;
+  const progress=Math.round((questStage/Math.max(1,total-1))*100);
   document.getElementById('questProgressFill').style.width=Math.max(8,progress)+'%';
-  document.getElementById('questProgressText').textContent=(questStage+1)+' / '+QUEST_STAGES.length;
+  document.getElementById('questProgressText').textContent=(questStage+1)+' / '+total;
+  document.getElementById('questTotalStages').textContent=total;
+
   const stage=QUEST_STAGES[questStage];
   document.getElementById('questCurrentIcon').textContent=String(questStage+1).padStart(2,'0');
   document.getElementById('questCurrentKicker').textContent=stage.kicker;
   document.getElementById('questCurrentTitle').textContent=stage.title;
   document.getElementById('questCurrentText').textContent=stage.question;
-  document.getElementById('questCurrentBtn').textContent=questStage===QUEST_STAGES.length-1?'Сделать последний шаг →':'Сделать шаг →';
+  document.getElementById('questCurrentBtn').textContent=questStage===total-1?'Сделать последний шаг →':'Сделать шаг →';
   updateWalker();
 }
 
 function updateWalker(){
   const walker=document.getElementById('questWalker');
   if(!walker) return;
-  const positions=[{x:7,y:76},{x:22,y:24},{x:37,y:72},{x:54,y:22},{x:71,y:68},{x:86,y:25},{x:94,y:55}];
+  const positions=[{x:7,y:76},{x:24,y:24},{x:42,y:72},{x:60,y:22},{x:78,y:68},{x:94,y:55}];
   const p=positions[Math.min(questStage,positions.length-1)];
   walker.style.left=p.x+'%'; walker.style.top=p.y+'%';
+}
+
+function resetQuestModal(){
+  const feedback=document.getElementById('questFeedback');
+  feedback.className='quest-feedback';
+  feedback.innerHTML='';
+  document.getElementById('questNextBtn').style.display='none';
+  document.getElementById('questSubmitBtn').style.display='none';
+  document.getElementById('questInstruction').style.display='none';
+  document.getElementById('questInstruction').innerHTML='';
+  document.getElementById('questVisual').style.display='none';
+  document.getElementById('questVisual').innerHTML='';
+  document.getElementById('questOptions').innerHTML='';
+  questSelection=[];
 }
 
 function openQuestQuestion(){
   const stage=QUEST_STAGES[questStage];
   questAnswered=false;
+  resetQuestModal();
+
   document.getElementById('questModalStage').textContent=String(questStage+1).padStart(2,'0');
   document.getElementById('questModalTopic').textContent=stage.topic;
   document.getElementById('questModalDifficulty').textContent=stage.difficulty;
   document.getElementById('questQuestion').textContent=stage.question;
-  const opts=document.getElementById('questOptions'); opts.innerHTML='';
-  stage.options.forEach((option,i)=>{
-    const b=document.createElement('button'); b.type='button'; b.className='quest-option';
-    b.innerHTML=`<span>${String.fromCharCode(65+i)}</span><b>${option}</b>`;
-    b.onclick=()=>answerQuest(i,b); opts.appendChild(b);
-  });
-  document.getElementById('questFeedback').className='quest-feedback';
-  document.getElementById('questFeedback').innerHTML='';
-  document.getElementById('questNextBtn').style.display='none';
+
+  const instruction=document.getElementById('questInstruction');
+  const visual=document.getElementById('questVisual');
+  const opts=document.getElementById('questOptions');
+
+  if(stage.type==='multi'){
+    instruction.textContent='Выбери ровно три варианта. После этого нажми «Проверить ответ».';
+    instruction.style.display='block';
+
+    stage.options.forEach((option,i)=>{
+      const b=document.createElement('button');
+      b.type='button';
+      b.className='quest-option';
+      b.innerHTML=`<span>${i+1}</span><b>${option}</b>`;
+      b.onclick=()=>toggleQuestOption(i,b);
+      opts.appendChild(b);
+    });
+    document.getElementById('questSubmitBtn').style.display='inline-flex';
+  }else if(stage.type==='matching'){
+    instruction.textContent='Для каждого признака выбери номер животного. В конце получится последовательность из шести цифр.';
+    instruction.style.display='block';
+
+    if(stage.visual){
+      visual.innerHTML=`<img src="${stage.visual}" alt="Животные на рисунке 1–6">`;
+      visual.style.display='block';
+    }
+
+    const box=document.createElement('div');
+    box.className='quest-matching';
+    stage.rows.forEach(([label])=>{
+      const row=document.createElement('div');
+      row.className='quest-match-row';
+      const safeLabel=label.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      row.innerHTML=`<b>${safeLabel}</b><select aria-label="${safeLabel}">
+        <option value="">—</option>
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+      </select>`;
+      opts.appendChild(row);
+    });
+    document.getElementById('questSubmitBtn').style.display='inline-flex';
+  }
+
   document.getElementById('questModal').classList.add('show');
 }
 
-function answerQuest(index,button){
+function toggleQuestOption(index,button){
   if(questAnswered) return;
-  questAttempts++;
+  const pos=questSelection.indexOf(index);
+  if(pos>=0){
+    questSelection.splice(pos,1);
+    button.classList.remove('selected');
+  }else{
+    if(questSelection.length>=3){
+      const feedback=document.getElementById('questFeedback');
+      feedback.className='quest-feedback hint';
+      feedback.innerHTML='<strong>Уже выбрано три.</strong> Если хочешь изменить ответ, сначала убери один вариант.';
+      return;
+    }
+    questSelection.push(index);
+    button.classList.add('selected');
+  }
+  document.getElementById('questFeedback').className='quest-feedback';
+  document.getElementById('questFeedback').innerHTML=questSelection.length
+    ? `Выбрано: <b>${questSelection.sort((a,b)=>a-b).map(i=>i+1).join(', ')}</b>`
+    : '';
+}
+
+function submitQuestAnswer(){
+  if(questAnswered) return;
   const stage=QUEST_STAGES[questStage];
+  questAttempts++;
+
+  let isCorrect=false;
+
+  if(stage.type==='multi'){
+    if(questSelection.length!==stage.answer.length){
+      const feedback=document.getElementById('questFeedback');
+      feedback.className='quest-feedback hint';
+      feedback.innerHTML='<strong>Нужно выбрать три варианта.</strong> Проверь, что выбрано ровно три ответа.';
+      return;
+    }
+    const chosen=[...questSelection].sort((a,b)=>a-b);
+    const correct=[...stage.answer].sort((a,b)=>a-b);
+    isCorrect=chosen.length===correct.length && chosen.every((v,i)=>v===correct[i]);
+  }else if(stage.type==='matching'){
+    const selects=[...document.querySelectorAll('#questOptions select')];
+    const values=selects.map(s=>s.value);
+    if(values.some(v=>!v)){
+      const feedback=document.getElementById('questFeedback');
+      feedback.className='quest-feedback hint';
+      feedback.innerHTML='<strong>Заполни все строки.</strong> Для каждого признака нужно выбрать животное.';
+      return;
+    }
+    isCorrect=values.every((v,i)=>v===stage.answer[i]);
+  }
+
   const feedback=document.getElementById('questFeedback');
-  if(index===stage.answer){
-    questAnswered=true; questCorrect++;
-    button.classList.add('correct');
-    document.querySelectorAll('.quest-option').forEach(b=>b.disabled=true);
+
+  if(isCorrect){
+    questAnswered=true;
+    questCorrect++;
+    if(stage.type==='multi'){
+      document.querySelectorAll('#questOptions .quest-option').forEach((b,i)=>{
+        b.disabled=true;
+        if(stage.answer.includes(i)) b.classList.add('correct');
+      });
+    }else{
+      document.querySelectorAll('#questOptions select').forEach(s=>s.disabled=true);
+    }
     feedback.className='quest-feedback success';
-    feedback.innerHTML='<strong>Точно.</strong> '+stage.explanation;
+    feedback.innerHTML='<strong>Верно.</strong> '+stage.explanation;
+    document.getElementById('questSubmitBtn').style.display='none';
     document.getElementById('questNextBtn').style.display='inline-flex';
   }else{
-    button.classList.add('wrong');
     feedback.className='quest-feedback hint';
-    feedback.innerHTML='<strong>Почти.</strong> Попробуй ещё раз — сейчас важнее не угадать, а найти логику.';
-    setTimeout(()=>button.classList.remove('wrong'),650);
+    feedback.innerHTML='<strong>Пока не открываем следующую точку.</strong> Попробуй ещё раз и посмотри на логику задания.';
   }
 }
 
@@ -1853,9 +1978,10 @@ function continueQuest(){
   }else{
     document.getElementById('questCorrect').textContent=questCorrect;
     document.getElementById('questAttempts').textContent=questAttempts;
-    const message=questCorrect===7
-      ? 'Очень уверенный маршрут. На занятии можно сразу переходить к более сложным связям и заданиям.'
-      : questCorrect>=5
+    const total=QUEST_STAGES.length;
+    const message=questCorrect===total
+      ? 'Все шесть заданий пройдены верно. Можно переходить к более сложным связям и заданиям.'
+      : questCorrect>=4
       ? 'Хороший маршрут: основные опоры уже есть, а дальше можно точечно усилить отдельные темы.'
       : 'Маршрут показал, где есть точки роста. Это как раз то, что полезно увидеть на пробном занятии.';
     document.getElementById('questFinishMessage').textContent=message;
@@ -1869,13 +1995,40 @@ function showQuestReview(index){
   document.getElementById('questModalTopic').textContent=stage.topic;
   document.getElementById('questModalDifficulty').textContent='Пройдено';
   document.getElementById('questQuestion').textContent=stage.question;
-  const opts=document.getElementById('questOptions'); opts.innerHTML='';
-  stage.options.forEach((option,i)=>{
-    const b=document.createElement('div'); b.className='quest-option review '+(i===stage.answer?'correct':'');
-    b.innerHTML=`<span>${String.fromCharCode(65+i)}</span><b>${option}</b>`; opts.appendChild(b);
-  });
+  document.getElementById('questInstruction').style.display='none';
+
+  const visual=document.getElementById('questVisual');
+  visual.style.display='none';
+  visual.innerHTML='';
+  if(stage.visual){
+    visual.innerHTML=`<img src="${stage.visual}" alt="Животные на рисунке 1–6">`;
+    visual.style.display='block';
+  }
+
+  const opts=document.getElementById('questOptions');
+  opts.innerHTML='';
+
+  if(stage.type==='multi'){
+    stage.options.forEach((option,i)=>{
+      const b=document.createElement('div');
+      b.className='quest-option review '+(stage.answer.includes(i)?'correct':'');
+      b.innerHTML=`<span>${i+1}</span><b>${option}</b>`;
+      opts.appendChild(b);
+    });
+  }else if(stage.type==='matching'){
+    const box=document.createElement('div');
+    box.className='quest-matching';
+    stage.rows.forEach(([label],i)=>{
+      const row=document.createElement('div');
+      row.className='quest-match-row';
+      row.innerHTML=`<b>${label}</b><select disabled><option>${stage.answer[i]}</option></select>`;
+      opts.appendChild(row);
+    });
+  }
+
   document.getElementById('questFeedback').className='quest-feedback success';
-  document.getElementById('questFeedback').innerHTML='<strong>Ответ:</strong> '+stage.explanation;
+  document.getElementById('questFeedback').innerHTML='<strong>Разбор:</strong> '+stage.explanation;
+  document.getElementById('questSubmitBtn').style.display='none';
   document.getElementById('questNextBtn').style.display='none';
   document.getElementById('questModal').classList.add('show');
 }
