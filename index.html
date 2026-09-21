@@ -619,85 +619,105 @@ window.MINI_CORRECT_TEXT = "5 000 кДж";
   </div>
 </section>
 
-<!-- ================= SLIDE 13 — ПЕРЕХОД К ИГРЕ ================= -->
+<!-- ================= SLIDE 13 — МИНИ-КВЕСТ ================= -->
 <section class="slide" data-slide="13">
-  <div class="slide-inner" style="align-items:center; text-align:center;">
-    <div class="eyebrow pink" style="margin:0 auto;">Игра</div>
-    <h1 class="slide-title">А теперь немного поиграем</h1>
-    <p class="slide-subtitle" style="max-width:560px; margin:0 auto;">Посмотрим, насколько уверенно ты ориентируешься в разных разделах биологии.</p>
-    <div style="margin-top:24px; position:relative;">
-      <div style="position:absolute; inset:-20px; background:var(--grad-violet-pink); opacity:.2; filter:blur(40px); border-radius:50%;"></div>
-      <p class="big-accent pink" style="position:relative; font-size:clamp(38px,5vw,64px); letter-spacing:0.02em;">СВОЯ ИГРА</p>
+  <div class="slide-inner quest-intro">
+    <div class="eyebrow pink">Мини-квест · диагностика</div>
+    <div class="quest-intro-grid">
+      <div class="quest-copy">
+        <h1 class="slide-title">Пройдём маленький путь<br><span class="quest-gradient">по большой биологии</span></h1>
+        <p class="slide-subtitle">Не экзамен и не «проверка на прочность». Ты будешь двигаться по маршруту от простого к более сложному — и по ходу мы увидим, что уже получается уверенно.</p>
+        <div class="quest-rules">
+          <div><span>01</span><b>7 остановок</b><small>от общей биологии до эволюции</small></div>
+          <div><span>02</span><b>1 вопрос на каждой</b><small>сразу видим логику решения</small></div>
+          <div><span>03</span><b>Ошибаться можно</b><small>важнее понять ход рассуждений</small></div>
+        </div>
+        <button class="btn btn-primary pink" onclick="startQuest()">Выйти на маршрут →</button>
+      </div>
+      <div class="quest-preview-card">
+        <div class="quest-preview-top"><span>ТВОЙ МАРШРУТ</span><b>01 → 07</b></div>
+        <div class="quest-mini-path">
+          <div class="mini-node done"><i>1</i><span>Общая</span></div><div class="mini-line"></div>
+          <div class="mini-node"><i>2</i><span>Генетика</span></div><div class="mini-line"></div>
+          <div class="mini-node"><i>3</i><span>Ботаника</span></div><div class="mini-line"></div>
+          <div class="mini-node"><i>4</i><span>Зоология</span></div><div class="mini-line"></div>
+          <div class="mini-node"><i>5</i><span>Человек</span></div><div class="mini-line"></div>
+          <div class="mini-node"><i>6</i><span>Экология</span></div><div class="mini-line"></div>
+          <div class="mini-node final"><i>7</i><span>Эволюция</span></div>
+        </div>
+        <div class="quest-preview-note">Каждый правильный ответ открывает следующую точку маршрута.</div>
+      </div>
     </div>
-    <button class="btn btn-primary pink" onclick="goTo(14)" style="margin-top:10px;">Начать игру →</button>
   </div>
 </section>
 
-<!-- ================= SLIDE 14 — ИГРОВОЕ ПОЛЕ ================= -->
+<!-- ================= SLIDE 14 — ИНТЕРАКТИВНАЯ ДОРОГА ================= -->
 <section class="slide" data-slide="14">
-  <div class="slide-inner" style="max-width:1180px; margin:0 auto; gap:18px;">
-    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+  <div class="slide-inner quest-route-wrap">
+    <div class="quest-route-head">
       <div>
-        <div class="eyebrow pink">Своя игра</div>
-        <h1 class="slide-title" style="font-size:clamp(24px,2.8vw,36px); margin-top:8px;">Выбери категорию и вопрос</h1>
+        <div class="eyebrow pink">Твой маршрут</div>
+        <h1 class="slide-title quest-route-title">Шаг за шагом</h1>
+        <p class="slide-subtitle">Нажми на активную точку. Следующая откроется после ответа.</p>
       </div>
-      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-pill); padding:14px 26px; box-shadow:var(--shadow-sm); font-family:var(--font-display); font-weight:800; font-size:18px;">
-        Счёт: <span id="gameScore" style="background:var(--grad-green-blue); -webkit-background-clip:text; background-clip:text; color:transparent;">0</span>
+      <div class="quest-progress-card">
+        <span id="questProgressText">1 / 7</span>
+        <div class="quest-progress-track"><i id="questProgressFill"></i></div>
       </div>
     </div>
-    <div id="gameBoard" style="display:grid; grid-template-columns:repeat(7,1fr); gap:8px;"></div>
+
+    <div class="quest-road-shell">
+      <div class="quest-road-bg"></div>
+      <svg class="quest-road-svg" viewBox="0 0 1200 420" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M90 325 C170 325 145 120 260 120 S355 330 445 315 S530 95 650 105 S760 330 855 300 S930 100 1040 120 S1080 285 1130 255" />
+      </svg>
+      <div class="quest-road-label label-1">СТАРТ</div>
+      <div class="quest-road-label label-7">ФИНИШ</div>
+      <div id="questNodes" class="quest-nodes"></div>
+      <div id="questWalker" class="quest-walker" aria-hidden="true">🧬</div>
+    </div>
+
+    <div class="quest-current-card" id="questCurrentCard">
+      <div class="quest-current-icon" id="questCurrentIcon">01</div>
+      <div class="quest-current-copy">
+        <span id="questCurrentKicker">ОБЩАЯ БИОЛОГИЯ · СТАРТ</span>
+        <h3 id="questCurrentTitle">Клетка и уровни организации</h3>
+        <p id="questCurrentText">Начнём с вопроса, который проверяет базовое понимание живой системы.</p>
+      </div>
+      <button class="btn btn-primary pink" id="questCurrentBtn" onclick="openQuestQuestion()">Сделать шаг →</button>
+    </div>
   </div>
 </section>
 
-<!-- GAME QUESTION MODAL -->
-<div class="modal-overlay" id="gameModal" style="align-items:center; justify-content:center;">
-  <div style="background:#fff; border-radius:28px; padding:44px 46px; max-width:640px; width:92%; box-shadow:0 30px 90px rgba(0,0,0,.4); position:relative; max-height:86vh; overflow-y:auto;">
-    <button class="modal-close" style="position:absolute; top:16px; right:18px; background:var(--bg-cool); color:var(--graphite); border:1px solid var(--line); width:38px; height:38px;" onclick="closeGameModal()">×</button>
-    <div style="display:flex; gap:10px; align-items:center; margin-bottom:16px;">
-      <span id="gqCategory" style="font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:.04em; background:var(--grad-blue-violet); -webkit-background-clip:text; background-clip:text; color:transparent;"></span>
-      <span id="gqValue" style="font-family:var(--font-display); font-weight:800; font-size:13px; background:var(--bg-cool); padding:4px 12px; border-radius:var(--radius-pill); color:var(--graphite-soft);"></span>
+<!-- ================= QUEST QUESTION MODAL ================= -->
+<div class="modal-overlay" id="questModal">
+  <div class="quest-modal-card">
+    <button class="modal-close quest-close" onclick="closeQuestModal()">×</button>
+    <div class="quest-modal-meta">
+      <span id="questModalStage">01</span>
+      <span id="questModalTopic">Общая биология</span>
+      <b id="questModalDifficulty">Разминка</b>
     </div>
-    <p id="gqQuestion" style="font-size:18px; font-weight:700; line-height:1.5; margin-bottom:22px;"></p>
-    <div id="gqAnswerBox" style="display:none; background:var(--bg-cool); border-radius:16px; padding:20px 22px; margin-bottom:20px;">
-      <p style="font-size:12.5px; font-weight:700; color:var(--graphite-faint); margin-bottom:6px;">ОТВЕТ</p>
-      <p id="gqAnswerText" style="font-size:16px; font-weight:700; margin-bottom:10px;"></p>
-      <p id="gqExplain" style="font-size:14px; color:var(--graphite-soft); font-weight:500; line-height:1.5;"></p>
-    </div>
-    <div id="gqControlsPre">
-      <button class="btn btn-primary violet" onclick="showGameAnswer()">Показать ответ</button>
-    </div>
-    <div id="gqControlsPost" style="display:none; gap:12px;">
-      <button class="btn btn-primary" onclick="gradeGame(true)">✓ Правильно</button>
-      <button class="btn btn-secondary" onclick="gradeGame(false)">✗ Неправильно</button>
-    </div>
-    <div id="gqControlsDone" style="display:none;">
-      <button class="btn btn-secondary" onclick="closeGameModal()">Вернуться к игре</button>
-    </div>
+    <h2 id="questQuestion">Вопрос</h2>
+    <div id="questOptions" class="quest-options"></div>
+    <div id="questFeedback" class="quest-feedback"></div>
+    <button id="questNextBtn" class="btn btn-primary pink quest-next-btn" style="display:none;" onclick="continueQuest()">Следующий шаг →</button>
   </div>
 </div>
 
-<!-- ================= SLIDE 15 — РЕЗУЛЬТАТ ИГРЫ ================= -->
+<!-- ================= SLIDE 15 — ФИНИШ КВЕСТА ================= -->
 <section class="slide" data-slide="15">
-  <div class="slide-inner" style="align-items:center; text-align:center; max-width:760px; margin:0 auto;">
-    <div class="eyebrow pink" style="margin:0 auto;">Итоги</div>
-    <h1 class="slide-title">Игра закончена</h1>
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; width:100%; margin-top:10px;">
-      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:26px; box-shadow:var(--shadow-sm);">
-        <p style="font-family:var(--font-display); font-weight:800; font-size:34px;" id="resTotal">0</p>
-        <p style="font-size:13px; font-weight:700; color:var(--graphite-faint); margin-top:6px;">Итоговый счёт</p>
-      </div>
-      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:26px; box-shadow:var(--shadow-sm);">
-        <p style="font-family:var(--font-display); font-weight:800; font-size:34px; color:var(--green-deep);" id="resCorrect">0</p>
-        <p style="font-size:13px; font-weight:700; color:var(--graphite-faint); margin-top:6px;">Правильных ответов</p>
-      </div>
-      <div style="background:#fff; border:1px solid var(--line); border-radius:var(--radius-lg); padding:26px; box-shadow:var(--shadow-sm);">
-        <p style="font-family:var(--font-display); font-weight:800; font-size:34px; color:var(--fuchsia);" id="resWrong">0</p>
-        <p style="font-size:13px; font-weight:700; color:var(--graphite-faint); margin-top:6px;">Ошибок</p>
-      </div>
+  <div class="slide-inner quest-finish">
+    <div class="eyebrow pink">Маршрут пройден</div>
+    <h1 class="slide-title">Ты прошёл путь<br><span class="quest-gradient">от клетки до эволюции</span></h1>
+    <p class="slide-subtitle">Теперь я уже вижу не только отдельные ответы, но и то, как ты рассуждаешь. Именно от этого будем отталкиваться на занятиях.</p>
+    <div class="quest-finish-stats">
+      <div><strong id="questCorrect">0</strong><span>правильных ответов</span></div>
+      <div><strong id="questAttempts">0</strong><span>попыток</span></div>
+      <div><strong>7</strong><span>разделов биологии</span></div>
     </div>
-    <div style="background:linear-gradient(135deg,#fff,var(--bg-cool-2)); border:1px solid var(--line); border-radius:var(--radius-lg); padding:30px 36px; margin-top:8px; box-shadow:var(--shadow-sm);">
-      <p style="font-size:16px; font-weight:700; line-height:1.55;">Мне важно не только получить правильный ответ, но и понять, как ты рассуждаешь.</p>
-    </div>
+    <div class="quest-finish-message" id="questFinishMessage">Главное — не идеальный маршрут, а то, что стало понятнее по дороге.</div>
+    <button class="btn btn-primary" onclick="goTo(16)">Показать, как проходят занятия →</button>
   </div>
 </section>
 
@@ -1308,11 +1328,129 @@ window.TAB_DATA = {
   color:var(--graphite-soft);
 }
 
+
+/* =========================================================
+   МИНИ-КВЕСТ — ДОРОГА ПО БИОЛОГИИ
+========================================================= */
+.quest-intro{max-width:1180px;}
+.quest-intro-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;margin-top:8px;}
+.quest-copy{display:flex;flex-direction:column;gap:22px;}
+.quest-gradient{background:var(--grad-violet-pink);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.quest-rules{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.quest-rules>div{background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:18px;padding:17px 16px;box-shadow:var(--shadow-sm);}
+.quest-rules span{display:block;font-family:var(--font-display);font-size:11px;color:var(--fuchsia);font-weight:800;margin-bottom:10px;}
+.quest-rules b{display:block;font-size:14px;line-height:1.25;}
+.quest-rules small{display:block;color:var(--graphite-soft);font-size:11.5px;line-height:1.35;margin-top:5px;font-weight:600;}
+.quest-preview-card{background:linear-gradient(145deg,#fff,var(--bg-cool-2));border:1px solid var(--line);border-radius:34px;padding:30px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden;min-height:430px;display:flex;flex-direction:column;justify-content:center;}
+.quest-preview-card:before{content:"";position:absolute;width:240px;height:240px;border-radius:50%;background:var(--grad-pink-fuchsia);opacity:.12;filter:blur(35px);right:-70px;top:-80px;}
+.quest-preview-top{display:flex;justify-content:space-between;align-items:center;position:relative;margin-bottom:24px;font-family:var(--font-display);font-size:11px;font-weight:800;color:var(--graphite-soft);letter-spacing:.05em;}
+.quest-preview-top b{color:var(--graphite);font-size:12px;}
+.quest-mini-path{display:flex;align-items:center;gap:0;position:relative;z-index:1;flex-wrap:wrap;justify-content:center;}
+.mini-node{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:55px;color:var(--graphite-faint);}
+.mini-node i{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:2px solid var(--line);font-style:normal;font-family:var(--font-display);font-size:12px;font-weight:800;box-shadow:var(--shadow-sm);}
+.mini-node.done i{background:var(--grad-green-blue);border-color:transparent;color:#fff;}
+.mini-node.final i{background:var(--grad-violet-pink);border-color:transparent;color:#fff;}
+.mini-node span{font-size:10px;font-weight:800;text-align:center;}
+.mini-line{width:18px;height:3px;background:linear-gradient(90deg,var(--line),#d5dbea);border-radius:99px;margin:0 1px 19px;}
+.quest-preview-note{position:relative;margin-top:30px;padding:15px 17px;background:#fff;border:1px solid var(--line);border-radius:16px;font-size:12.5px;color:var(--graphite-soft);font-weight:700;line-height:1.45;text-align:center;}
+
+.quest-route-wrap{max-width:1260px;gap:18px;}
+.quest-route-head{display:flex;justify-content:space-between;align-items:flex-end;gap:25px;}
+.quest-route-title{font-size:clamp(32px,4vw,52px);margin-top:7px;}
+.quest-progress-card{width:230px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow-sm);flex-shrink:0;}
+.quest-progress-card span{font-family:var(--font-display);font-size:12px;font-weight:800;display:block;margin-bottom:9px;text-align:right;}
+.quest-progress-track{height:7px;border-radius:99px;background:var(--bg-cool-2);overflow:hidden;}
+.quest-progress-track i{display:block;height:100%;width:8%;border-radius:99px;background:var(--grad-full);transition:width .55s cubic-bezier(.65,0,.35,1);}
+.quest-road-shell{position:relative;height:400px;border:1px solid var(--line);border-radius:32px;background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(238,242,248,.8));box-shadow:var(--shadow-md);overflow:hidden;}
+.quest-road-shell:before,.quest-road-shell:after{content:"";position:absolute;border-radius:50%;filter:blur(40px);opacity:.12;pointer-events:none;}
+.quest-road-shell:before{width:260px;height:260px;left:-90px;bottom:-110px;background:var(--green);}
+.quest-road-shell:after{width:300px;height:300px;right:-90px;top:-130px;background:var(--fuchsia);}
+.quest-road-bg{position:absolute;inset:0;background-image:radial-gradient(rgba(27,34,51,.075) 1px,transparent 1px);background-size:20px 20px;opacity:.55;}
+.quest-road-svg{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;}
+.quest-road-svg path{fill:none;stroke:#d9dfeb;stroke-width:9;stroke-linecap:round;stroke-dasharray:5 16;}
+.quest-road-svg:after{content:"";}
+.quest-road-label{position:absolute;z-index:2;font-family:var(--font-display);font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--graphite-faint);background:rgba(255,255,255,.8);padding:6px 9px;border-radius:99px;border:1px solid var(--line);}
+.label-1{left:4%;bottom:8%;}.label-7{right:3%;top:11%;}
+.quest-nodes{position:absolute;inset:0;z-index:5;}
+.quest-node{position:absolute;width:150px;min-height:72px;transform:translate(-50%,-50%);padding:10px 13px 10px 50px;text-align:left;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease,opacity .25s ease;}
+.quest-node:nth-child(1){left:7%;top:76%;}.quest-node:nth-child(2){left:22%;top:24%;}.quest-node:nth-child(3){left:37%;top:72%;}.quest-node:nth-child(4){left:54%;top:22%;}.quest-node:nth-child(5){left:71%;top:68%;}.quest-node:nth-child(6){left:86%;top:25%;}.quest-node:nth-child(7){left:94%;top:55%;}
+.quest-node.current{border:2px solid var(--fuchsia);box-shadow:0 14px 35px rgba(217,70,196,.2);animation:questPulse 2s infinite;}
+.quest-node.current:hover{transform:translate(-50%,-55%);}
+.quest-node.passed{border-color:rgba(15,179,126,.35);}
+.quest-node.locked{opacity:.58;filter:grayscale(.15);cursor:not-allowed;}
+.quest-node-num{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:31px;height:31px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--bg-cool);font-family:var(--font-display);font-size:10px;font-weight:800;color:var(--graphite-soft);}
+.quest-node.current .quest-node-num{background:var(--grad-pink-fuchsia);color:#fff;}
+.quest-node.passed .quest-node-num{background:var(--grad-green-blue);color:#fff;}
+.quest-node b{display:block;font-size:11px;line-height:1.25;color:var(--graphite);}
+.quest-node small{display:block;margin-top:3px;font-size:9.5px;line-height:1.25;color:var(--graphite-faint);font-weight:700;}
+.quest-walker{position:absolute;z-index:7;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;border:3px solid #fff;box-shadow:0 8px 22px rgba(27,34,51,.2);font-size:22px;transition:left .65s cubic-bezier(.65,0,.35,1),top .65s cubic-bezier(.65,0,.35,1);}
+.quest-current-card{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;background:#fff;border:1px solid var(--line);border-radius:24px;padding:17px 20px;box-shadow:var(--shadow-md);}
+.quest-current-icon{width:48px;height:48px;border-radius:15px;background:var(--grad-pink-fuchsia);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:12px;font-weight:800;}
+.quest-current-copy span{font-size:10px;color:var(--fuchsia);font-weight:800;letter-spacing:.06em;}
+.quest-current-copy h3{font-family:var(--font-display);font-size:16px;margin:4px 0;}
+.quest-current-copy p{font-size:12.5px;color:var(--graphite-soft);font-weight:600;line-height:1.35;}
+.quest-current-card .btn{padding:13px 20px;font-size:13px;white-space:nowrap;}
+
+.quest-modal-card{background:#fff;border-radius:30px;padding:38px 40px;max-width:680px;width:92%;box-shadow:0 30px 90px rgba(0,0,0,.35);position:relative;max-height:88vh;overflow-y:auto;}
+.quest-close{background:var(--bg-cool)!important;color:var(--graphite)!important;border:1px solid var(--line)!important;width:40px!important;height:40px!important;top:15px!important;right:15px!important;position:absolute!important;}
+.quest-modal-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:18px;padding-right:45px;}
+.quest-modal-meta span:first-child{width:34px;height:34px;border-radius:11px;background:var(--grad-pink-fuchsia);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:10px;font-weight:800;}
+.quest-modal-meta span:nth-child(2){font-size:11px;font-weight:800;color:var(--graphite-soft);}
+.quest-modal-meta b{font-size:10px;padding:6px 9px;border-radius:99px;background:var(--bg-cool);color:var(--graphite-faint);}
+.quest-modal-card h2{font-family:var(--font-display);font-size:clamp(20px,2.3vw,29px);line-height:1.25;margin-bottom:24px;max-width:590px;}
+.quest-options{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.quest-option{min-height:66px;padding:14px 15px;border-radius:16px;border:2px solid var(--line);background:#fff;display:flex;align-items:center;gap:12px;text-align:left;transition:all .2s ease;}
+.quest-option:not(.review):not(:disabled):hover{border-color:var(--fuchsia);transform:translateY(-2px);box-shadow:var(--shadow-sm);}
+.quest-option span{flex:0 0 30px;width:30px;height:30px;border-radius:10px;background:var(--bg-cool);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:10px;font-weight:800;color:var(--graphite-soft);}
+.quest-option b{font-size:13px;line-height:1.35;}
+.quest-option.correct{border-color:var(--green)!important;background:rgba(15,179,126,.07);}
+.quest-option.correct span{background:var(--green);color:#fff;}
+.quest-option.wrong{border-color:#ef6d79!important;background:rgba(239,109,121,.07);animation:questShake .35s ease;}
+.quest-option:disabled{cursor:default;}
+.quest-feedback{margin-top:16px;min-height:0;border-radius:15px;font-size:13px;line-height:1.55;font-weight:600;color:var(--graphite-soft);}
+.quest-feedback.success{padding:16px 18px;background:rgba(15,179,126,.08);border:1px solid rgba(15,179,126,.2);}
+.quest-feedback.hint{padding:14px 16px;background:var(--bg-cool);}
+.quest-next-btn{margin-top:18px;}
+.quest-finish{align-items:center;text-align:center;max-width:850px;}
+.quest-finish .slide-subtitle{max-width:700px;}
+.quest-finish-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;margin-top:10px;}
+.quest-finish-stats>div{background:#fff;border:1px solid var(--line);border-radius:20px;padding:21px 15px;box-shadow:var(--shadow-sm);}
+.quest-finish-stats strong{display:block;font-family:var(--font-display);font-size:30px;background:var(--grad-violet-pink);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.quest-finish-stats span{display:block;margin-top:6px;font-size:11px;color:var(--graphite-faint);font-weight:800;}
+.quest-finish-message{background:linear-gradient(135deg,#fff,var(--bg-cool-2));border:1px solid var(--line);border-radius:20px;padding:20px 24px;font-size:14px;font-weight:700;line-height:1.5;width:100%;}
+@keyframes questPulse{0%,100%{box-shadow:0 14px 35px rgba(217,70,196,.18)}50%{box-shadow:0 16px 44px rgba(217,70,196,.34)}}
+@keyframes questShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
 @media (max-width:900px){
   .process-interactive-grid{ grid-template-columns:repeat(2,1fr); }
   .process-detail{ grid-template-columns:1fr; }
   .process-detail-visual{ display:none; }
 }
+@media (max-width:900px){
+  .quest-intro-grid{grid-template-columns:1fr;gap:28px;}
+  .quest-preview-card{min-height:260px;}
+  .quest-route-head{align-items:flex-start;flex-direction:column;}
+  .quest-progress-card{width:100%;}
+  .quest-road-shell{height:430px;}
+  .quest-current-card{grid-template-columns:auto 1fr;}
+  .quest-current-card .btn{grid-column:1 / -1;width:100%;justify-content:center;}
+  .quest-node{width:138px;}
+}
+@media (max-width:600px){
+  .quest-rules{grid-template-columns:1fr;}
+  .quest-preview-card{padding:22px;}
+  .quest-mini-path{gap:4px;}
+  .mini-line{width:8px;}
+  .quest-road-shell{height:620px;}
+  .quest-road-svg{display:none;}
+  .quest-node{width:165px;}
+  .quest-node:nth-child(1){left:24%;top:9%;}.quest-node:nth-child(2){left:72%;top:22%;}.quest-node:nth-child(3){left:24%;top:36%;}.quest-node:nth-child(4){left:72%;top:49%;}.quest-node:nth-child(5){left:24%;top:63%;}.quest-node:nth-child(6){left:72%;top:76%;}.quest-node:nth-child(7){left:48%;top:91%;}
+  .quest-walker{display:none;}
+  .quest-options{grid-template-columns:1fr;}
+  .quest-modal-card{padding:30px 22px;}
+  .quest-finish-stats{grid-template-columns:1fr;}
+}
+
 @media (max-width:600px){
   .process-interactive-grid{ grid-template-columns:1fr; }
 }
@@ -1352,12 +1490,7 @@ function goTo(n){
 
   // Всегда синхронизируем счёт с итоговым слайдом, в том числе
   // если ведущий переходит к итогам стрелкой до полного прохождения игры.
-  if(n===15 && typeof gameScore !== 'undefined'){
-    document.getElementById('resTotal').textContent = gameScore;
-    document.getElementById('resCorrect').textContent = gameStats.correct;
-    document.getElementById('resWrong').textContent = gameStats.wrong;
-  }
-  document.getElementById('progressFill').style.width = (n/TOTAL*100)+'%';
+    document.getElementById('progressFill').style.width = (n/TOTAL*100)+'%';
   document.getElementById('prevBtn').disabled = (n===1);
   document.getElementById('nextBtn').disabled = (n===TOTAL);
   renderDots();
@@ -1369,9 +1502,9 @@ function nextSlide(){ goTo(current+1); }
 function prevSlide(){ goTo(current-1); }
 
 document.addEventListener('keydown', (e)=>{
-  if(e.key==='ArrowRight' || e.key===' '){ e.preventDefault(); if(!imgModalOpen() && !gameModalOpen()) nextSlide(); }
-  else if(e.key==='ArrowLeft'){ if(!imgModalOpen() && !gameModalOpen()) prevSlide(); }
-  else if(e.key==='Escape'){ closeModal(); closeGameModal(); }
+  if(e.key==='ArrowRight' || e.key===' '){ e.preventDefault(); if(!imgModalOpen() && !questModalOpen()) nextSlide(); }
+  else if(e.key==='ArrowLeft'){ if(!imgModalOpen() && !questModalOpen()) prevSlide(); }
+  else if(e.key==='Escape'){ closeModal(); closeQuestModal(); }
 });
 
 /* =========================================================
@@ -1545,159 +1678,213 @@ renderEgeTask();
 </script>
 <script>
 /* =========================================================
-   СВОЯ ИГРА (слайд 14)
+   МИНИ-КВЕСТ: ИНТЕРАКТИВНАЯ ДОРОГА ПО БИОЛОГИИ
 ========================================================= */
-const GAME_CATEGORIES = [
+const QUEST_STAGES = [
   {
-    name: "Общая биология",
-    grad: "var(--grad-green-blue)",
-    q100: { q:"Какая органелла клетки отвечает за синтез АТФ и почему её называют «энергетической станцией»?",
-            a:"Митохондрия",
-            e:"В митохондриях происходит клеточное дыхание — окисление органических веществ с образованием АТФ, основного источника энергии клетки." },
-    q200: { q:"Почему вирусы не относят к живым организмам в полном смысле, хотя у них есть собственный генетический материал?",
-            a:"Потому что у них нет собственного обмена веществ",
-            e:"Вирусы не могут самостоятельно размножаться и осуществлять обмен веществ — они используют для этого клетку-хозяина, то есть вне клетки не проявляют свойств живого." }
+    title:"Клетка и уровни организации",
+    topic:"Общая биология",
+    kicker:"ОБЩАЯ БИОЛОГИЯ · СТАРТ",
+    difficulty:"Разминка",
+    color:"green",
+    question:"Какой уровень организации живого является минимальным уровнем, на котором проявляются основные свойства живого?",
+    options:["Молекулярный","Клеточный","Органный","Организменный"],
+    answer:1,
+    explanation:"Клетка — структурно-функциональная единица живого: именно на клеточном уровне проявляется совокупность основных свойств живого организма."
   },
   {
-    name: "Генетика",
-    grad: "var(--grad-blue-violet)",
-    q100: { q:"У человека карие глаза (A) доминируют над голубыми (a). Кареглазый гетерозиготный отец (Aa) и голубоглазая мать (aa) ждут ребёнка. Какова вероятность рождения голубоглазого ребёнка?",
-            a:"50%",
-            e:"Скрещивание Aa × aa — это анализирующее скрещивание, расщепление по фенотипу 1:1, то есть 50% Aa (кареглазые) и 50% aa (голубоглазые)." },
-    q200: { q:"При скрещивании дигетерозиготного растения гороха с растением, рецессивным по обоим признакам, получили расщепление, близкое к 1:1:1:1. О чём это говорит?",
-            a:"Гены расположены в разных хромосомах и наследуются независимо",
-            e:"Это анализирующее скрещивание. Расщепление 1:1:1:1 характерно именно для независимого наследования — если бы гены были сцеплены, соотношение классов было бы другим." }
+    title:"Генетический код",
+    topic:"Генетика",
+    kicker:"ГЕНЕТИКА · ШАГ 2",
+    difficulty:"Легче среднего",
+    color:"blue",
+    question:"Участок ДНК содержит информацию о последовательности аминокислот белка. Что непосредственно определяет последовательность аминокислот при синтезе белка?",
+    options:["Последовательность нуклеотидов иРНК","Число хромосом","Количество рибосом","Толщина клеточной мембраны"],
+    answer:0,
+    explanation:"Последовательность нуклеотидов иРНК задаёт последовательность кодонов, а кодоны определяют последовательность аминокислот в белке."
   },
   {
-    name: "Ботаника",
-    grad: "linear-gradient(120deg,var(--blue),var(--emerald))",
-    q100: { q:"Какие два механизма обеспечивают движение воды от корней к листьям против силы тяжести?",
-            a:"Корневое давление и транспирация",
-            e:"Корневое давление «выталкивает» воду снизу, а испарение воды листьями (транспирация) создаёт присасывающую силу сверху — вместе они поднимают воду по сосудам." },
-    q200: { q:"Почему при удалении верхушечной почки растения усиливается рост боковых побегов?",
-            a:"Снижается концентрация ауксина, подавляющего боковые почки",
-            e:"Верхушечная почка вырабатывает гормон ауксин, который тормозит рост боковых почек (апикальное доминирование). Без верхушки его становится меньше, и боковые почки трогаются в рост." }
+    title:"Путь воды в растении",
+    topic:"Ботаника",
+    kicker:"БОТАНИКА · ШАГ 3",
+    difficulty:"Средний",
+    color:"violet",
+    question:"Какой проводящий элемент обеспечивает восходящий ток воды и минеральных веществ от корня к листьям?",
+    options:["Флоэма","Ксилема","Камбий","Эпидерма"],
+    answer:1,
+    explanation:"Ксилема проводит воду и минеральные вещества преимущественно от корня вверх. Флоэма переносит органические вещества."
   },
   {
-    name: "Зоология",
-    grad: "var(--grad-violet-pink)",
-    q100: { q:"Почему кости птиц полые внутри, а не сплошные, как у большинства млекопитающих?",
-            a:"Это снижает массу тела и облегчает полёт",
-            e:"Полые кости, заполненные воздухом, делают скелет лёгким, сохраняя прочность — важное приспособление к полёту." },
-    q200: { q:"У земноводных сердце трёхкамерное, но кровь в нём всё равно частично смешивается. Почему это происходит?",
-            a:"В желудочке нет перегородки, разделяющей артериальную и венозную кровь",
-            e:"Один желудочек получает и артериальную кровь из лёгких, и венозную из тела — из-за отсутствия перегородки они частично смешиваются, поэтому органы получают смешанную кровь." }
+    title:"Кровообращение животных",
+    topic:"Зоология",
+    kicker:"ЗООЛОГИЯ · ШАГ 4",
+    difficulty:"Средний",
+    color:"pink",
+    question:"Какое преимущество даёт птицам и млекопитающим полное разделение артериальной и венозной крови?",
+    options:["Уменьшает потребность тканей в кислороде","Позволяет поддерживать высокий уровень обмена веществ","Полностью прекращает теплоотдачу","Делает дыхание необязательным"],
+    answer:1,
+    explanation:"Полное разделение потоков крови позволяет эффективно снабжать ткани кислородом, что поддерживает высокий уровень обмена веществ."
   },
   {
-    name: "Экология",
-    grad: "var(--grad-pink-fuchsia)",
-    q100: { q:"Почему пищевые цепи в природе обычно состоят не более чем из 4–5 звеньев?",
-            a:"На каждом уровне теряется около 90% энергии",
-            e:"По правилу 10% на каждый следующий трофический уровень переходит лишь около 10% энергии — после 4–5 звеньев энергии остаётся так мало, что цепь не может продолжаться." },
-    q200: { q:"Как, скорее всего, изменится численность зайцев, если резко истребить их основных хищников — рысей?",
-            a:"Сначала резко вырастет, а затем упадёт из-за нехватки корма",
-            e:"Без хищников численность жертв сначала растёт, но затем корма на всех не хватает, начинается голод и болезни — численность падает. Это пример саморегуляции экосистемы." }
+    title:"Нервная регуляция",
+    topic:"Анатомия и физиология человека",
+    kicker:"ЧЕЛОВЕК · ШАГ 5",
+    difficulty:"Сложнее",
+    color:"green",
+    question:"Почему при резком испуге у человека учащаются сердцебиение и дыхание?",
+    options:["Активируется симпатический отдел вегетативной нервной системы","Полностью прекращается работа парасимпатического отдела","Кровь перестаёт поступать к мышцам","Снижается потребность организма в кислороде"],
+    answer:0,
+    explanation:"При стрессовой реакции активируется симпатический отдел вегетативной нервной системы: повышаются частота сердечных сокращений и вентиляция лёгких."
   },
   {
-    name: "Эволюция",
-    grad: "linear-gradient(120deg,var(--fuchsia),var(--violet))",
-    q100: { q:"В промышленных районах Англии XIX века среди бабочек берёзовой пяденицы стала преобладать тёмная окраска. Как называется этот процесс и с чем он связан?",
-            a:"Индустриальный меланизм — результат естественного отбора",
-            e:"Копоть от заводов затемнила стволы деревьев, и светлые бабочки стали заметнее для птиц. Тёмные особи выживали и размножались чаще — классический пример движущего отбора." },
-    q200: { q:"Чем движущий отбор принципиально отличается от стабилизирующего?",
-            a:"Движущий сдвигает признак в одну сторону, стабилизирующий сохраняет среднее значение",
-            e:"Движущий отбор благоприятствует особям с отклонением признака в определённую сторону (при смене условий), а стабилизирующий, наоборот, устраняет крайние отклонения и сохраняет уже сложившуюся норму." }
+    title:"Энергия в экосистеме",
+    topic:"Экология",
+    kicker:"ЭКОЛОГИЯ · ШАГ 6",
+    difficulty:"Сложный",
+    color:"blue",
+    question:"В пищевой цепи на уровне продуцентов запасено 20 000 кДж энергии. Сколько энергии примерно может перейти на второй трофический уровень?",
+    options:["20 кДж","200 кДж","2 000 кДж","18 000 кДж"],
+    answer:2,
+    explanation:"По правилу 10% на следующий трофический уровень в среднем переходит около десятой части энергии: 20 000 × 0,1 = 2 000 кДж."
   },
   {
-    name: "Анатомия человека",
-    grad: "var(--grad-green-blue)",
-    q100: { q:"Почему при физической нагрузке у человека учащается дыхание?",
-            a:"Организму нужно больше кислорода и быстрее выводить углекислый газ",
-            e:"Мышцы при работе интенсивнее расходуют кислород и производят больше CO₂ — дыхательный центр реагирует на это учащением дыхания." },
-    q200: { q:"Почему тяжёлое повреждение продолговатого мозга смертельно опасно, а повреждение коры больших полушарий может не привести к смерти?",
-            a:"В продолговатом мозге находятся жизненно важные центры — дыхательный и сердечно-сосудистый",
-            e:"Продолговатый мозг регулирует дыхание и работу сердца — без него организм не может жить. Кора отвечает за высшую нервную деятельность, и её повреждение не всегда смертельно." }
+    title:"Естественный отбор",
+    topic:"Эволюция",
+    kicker:"ЭВОЛЮЦИЯ · ФИНИШ",
+    difficulty:"Финальный",
+    color:"fuchsia",
+    question:"В популяции особи с определённым наследственным признаком стали оставлять больше потомков из-за изменения условий среды. Какой процесс непосредственно изменяет частоту этого признака в популяции?",
+    options:["Естественный отбор","Митоз","Транскрипция","Осмос"],
+    answer:0,
+    explanation:"Если наследственный признак повышает вероятность выживания и размножения, его носители оставляют больше потомков — действие естественного отбора меняет частоту вариантов признака в популяции."
   }
 ];
 
-let gameScore = 0;
-let gameStats = { correct:0, wrong:0 };
-let gameAnswered = 0;
-const TOTAL_GAME_Q = GAME_CATEGORIES.length * 2;
-let currentGameCell = null;
+let questStage = 0;
+let questCorrect = 0;
+let questAttempts = 0;
+let questAnswered = false;
 
-function buildGameBoard(){
-  const board = document.getElementById('gameBoard');
-  board.innerHTML = '';
-  GAME_CATEGORIES.forEach(cat=>{
-    const h = document.createElement('div');
-    h.style.cssText = "background:"+cat.grad+"; color:#fff; border-radius:14px; padding:14px 8px; text-align:center; font-family:var(--font-display); font-weight:700; font-size:12.5px; line-height:1.25; min-height:56px; display:flex; align-items:center; justify-content:center;";
-    h.textContent = cat.name;
-    board.appendChild(h);
-  });
-  [100,200].forEach(val=>{
-    GAME_CATEGORIES.forEach((cat, ci)=>{
-      const cell = document.createElement('div');
-      cell.className = 'game-cell';
-      cell.dataset.cat = ci; cell.dataset.val = val;
-      cell.style.cssText = "background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px 8px; text-align:center; font-family:var(--font-display); font-weight:800; font-size:20px; color:var(--graphite-soft); cursor:pointer; box-shadow:var(--shadow-sm);";
-      cell.textContent = val;
-      cell.onclick = ()=> openGameCell(ci, val, cell);
-      board.appendChild(cell);
-    });
-  });
+function startQuest(){
+  questStage = 0; questCorrect = 0; questAttempts = 0; questAnswered = false;
+  renderQuestRoute();
+  goTo(14);
 }
 
-function openGameCell(catIndex, val, cellEl){
-  if(cellEl.classList.contains('used')) return;
-  currentGameCell = cellEl;
-  const cat = GAME_CATEGORIES[catIndex];
-  const q = val===100 ? cat.q100 : cat.q200;
-  document.getElementById('gqCategory').textContent = cat.name;
-  document.getElementById('gqValue').textContent = val+' баллов';
-  document.getElementById('gqQuestion').textContent = q.q;
-  document.getElementById('gqAnswerText').textContent = q.a;
-  document.getElementById('gqExplain').textContent = q.e;
-  document.getElementById('gqAnswerBox').style.display = 'none';
-  document.getElementById('gqControlsPre').style.display = 'block';
-  document.getElementById('gqControlsPost').style.display = 'none';
-  document.getElementById('gqControlsDone').style.display = 'none';
-  document.getElementById('gameModal').dataset.val = val;
-  document.getElementById('gameModal').classList.add('show');
+function renderQuestRoute(){
+  const wrap = document.getElementById('questNodes');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  QUEST_STAGES.forEach((stage,i)=>{
+    const node = document.createElement('button');
+    node.type='button';
+    node.className='quest-node '+(i<questStage?'passed ':'')+(i===questStage?'current ':'')+(i>questStage?'locked ':'');
+    node.dataset.stage=i;
+    node.innerHTML=`<span class="quest-node-num">${String(i+1).padStart(2,'0')}</span><b>${stage.title}</b><small>${stage.topic}</small>`;
+    if(i===questStage) node.onclick=openQuestQuestion;
+    else if(i<questStage) node.onclick=()=>showQuestReview(i);
+    wrap.appendChild(node);
+  });
+
+  const progress=Math.round((questStage/QUEST_STAGES.length)*100);
+  document.getElementById('questProgressFill').style.width=Math.max(8,progress)+'%';
+  document.getElementById('questProgressText').textContent=(questStage+1)+' / '+QUEST_STAGES.length;
+  const stage=QUEST_STAGES[questStage];
+  document.getElementById('questCurrentIcon').textContent=String(questStage+1).padStart(2,'0');
+  document.getElementById('questCurrentKicker').textContent=stage.kicker;
+  document.getElementById('questCurrentTitle').textContent=stage.title;
+  document.getElementById('questCurrentText').textContent=stage.question;
+  document.getElementById('questCurrentBtn').textContent=questStage===QUEST_STAGES.length-1?'Сделать последний шаг →':'Сделать шаг →';
+  updateWalker();
 }
-function showGameAnswer(){
-  document.getElementById('gqAnswerBox').style.display = 'block';
-  document.getElementById('gqControlsPre').style.display = 'none';
-  document.getElementById('gqControlsPost').style.display = 'flex';
+
+function updateWalker(){
+  const walker=document.getElementById('questWalker');
+  if(!walker) return;
+  const positions=[{x:7,y:76},{x:22,y:24},{x:37,y:72},{x:54,y:22},{x:71,y:68},{x:86,y:25},{x:94,y:55}];
+  const p=positions[Math.min(questStage,positions.length-1)];
+  walker.style.left=p.x+'%'; walker.style.top=p.y+'%';
 }
-function gradeGame(isCorrect){
-  const val = parseInt(document.getElementById('gameModal').dataset.val,10);
-  if(isCorrect){ gameScore += val; gameStats.correct++; }
-  else { gameStats.wrong++; }
-  gameAnswered++;
-  document.getElementById('gameScore').textContent = gameScore;
-  if(currentGameCell){ currentGameCell.classList.add('used'); currentGameCell.style.cursor='default'; }
-  document.getElementById('gqControlsPost').style.display = 'none';
-  document.getElementById('gqControlsDone').style.display = 'block';
-  if(gameAnswered >= TOTAL_GAME_Q){
-    setTimeout(()=>{
-      closeGameModal();
-      document.getElementById('resTotal').textContent = gameScore;
-      document.getElementById('resCorrect').textContent = gameStats.correct;
-      document.getElementById('resWrong').textContent = gameStats.wrong;
-      goTo(15);
-    }, 500);
+
+function openQuestQuestion(){
+  const stage=QUEST_STAGES[questStage];
+  questAnswered=false;
+  document.getElementById('questModalStage').textContent=String(questStage+1).padStart(2,'0');
+  document.getElementById('questModalTopic').textContent=stage.topic;
+  document.getElementById('questModalDifficulty').textContent=stage.difficulty;
+  document.getElementById('questQuestion').textContent=stage.question;
+  const opts=document.getElementById('questOptions'); opts.innerHTML='';
+  stage.options.forEach((option,i)=>{
+    const b=document.createElement('button'); b.type='button'; b.className='quest-option';
+    b.innerHTML=`<span>${String.fromCharCode(65+i)}</span><b>${option}</b>`;
+    b.onclick=()=>answerQuest(i,b); opts.appendChild(b);
+  });
+  document.getElementById('questFeedback').className='quest-feedback';
+  document.getElementById('questFeedback').innerHTML='';
+  document.getElementById('questNextBtn').style.display='none';
+  document.getElementById('questModal').classList.add('show');
+}
+
+function answerQuest(index,button){
+  if(questAnswered) return;
+  questAttempts++;
+  const stage=QUEST_STAGES[questStage];
+  const feedback=document.getElementById('questFeedback');
+  if(index===stage.answer){
+    questAnswered=true; questCorrect++;
+    button.classList.add('correct');
+    document.querySelectorAll('.quest-option').forEach(b=>b.disabled=true);
+    feedback.className='quest-feedback success';
+    feedback.innerHTML='<strong>Точно.</strong> '+stage.explanation;
+    document.getElementById('questNextBtn').style.display='inline-flex';
+  }else{
+    button.classList.add('wrong');
+    feedback.className='quest-feedback hint';
+    feedback.innerHTML='<strong>Почти.</strong> Попробуй ещё раз — сейчас важнее не угадать, а найти логику.';
+    setTimeout(()=>button.classList.remove('wrong'),650);
   }
 }
-function closeGameModal(){
-  document.getElementById('gameModal').classList.remove('show');
-}
-function gameModalOpen(){ return document.getElementById('gameModal').classList.contains('show'); }
-document.getElementById('gameModal').addEventListener('click', (e)=>{ if(e.target===e.currentTarget) closeGameModal(); });
 
-buildGameBoard();
-</script>
-<script>
+function continueQuest(){
+  closeQuestModal();
+  if(questStage < QUEST_STAGES.length-1){
+    questStage++;
+    renderQuestRoute();
+  }else{
+    document.getElementById('questCorrect').textContent=questCorrect;
+    document.getElementById('questAttempts').textContent=questAttempts;
+    const message=questCorrect===7
+      ? 'Очень уверенный маршрут. На занятии можно сразу переходить к более сложным связям и заданиям.'
+      : questCorrect>=5
+      ? 'Хороший маршрут: основные опоры уже есть, а дальше можно точечно усилить отдельные темы.'
+      : 'Маршрут показал, где есть точки роста. Это как раз то, что полезно увидеть на пробном занятии.';
+    document.getElementById('questFinishMessage').textContent=message;
+    goTo(15);
+  }
+}
+
+function showQuestReview(index){
+  const stage=QUEST_STAGES[index];
+  document.getElementById('questModalStage').textContent=String(index+1).padStart(2,'0');
+  document.getElementById('questModalTopic').textContent=stage.topic;
+  document.getElementById('questModalDifficulty').textContent='Пройдено';
+  document.getElementById('questQuestion').textContent=stage.question;
+  const opts=document.getElementById('questOptions'); opts.innerHTML='';
+  stage.options.forEach((option,i)=>{
+    const b=document.createElement('div'); b.className='quest-option review '+(i===stage.answer?'correct':'');
+    b.innerHTML=`<span>${String.fromCharCode(65+i)}</span><b>${option}</b>`; opts.appendChild(b);
+  });
+  document.getElementById('questFeedback').className='quest-feedback success';
+  document.getElementById('questFeedback').innerHTML='<strong>Ответ:</strong> '+stage.explanation;
+  document.getElementById('questNextBtn').style.display='none';
+  document.getElementById('questModal').classList.add('show');
+}
+
+function closeQuestModal(){ document.getElementById('questModal').classList.remove('show'); }
+function questModalOpen(){ return document.getElementById('questModal').classList.contains('show'); }
+document.getElementById('questModal').addEventListener('click',(e)=>{ if(e.target===e.currentTarget) closeQuestModal(); });
+renderQuestRoute();
+
 /* =========================================================
    ИНТЕРАКТИВНЫЙ ПРОЦЕСС ПОДГОТОВКИ (слайд 16)
 ========================================================= */
